@@ -1,11 +1,15 @@
+win_w = 800	
+win_h = 800
+
 require("player")
 
 -- KEYMAP
 rot_l = "j"
 rot_r = "k"
-
-win_w = 800	
-win_h = 800
+inc_x = "d"
+dec_x = "a"
+inc_y = "w"
+dec_y = "s"
 
 stretch_speed = 600
 round_speed = 2
@@ -24,6 +28,14 @@ function love.keypressed(key)
 		player.rotation_dir = player.rotation_dir + 1
 	elseif key == rot_l then
 		player.rotation_dir = player.rotation_dir - 1
+	elseif key == inc_x then
+		player.x_dir = player.x_dir + 1
+	elseif key == dec_x then
+		player.x_dir = player.x_dir - 1
+	elseif key == dec_y then
+		player.y_dir = player.y_dir + 1
+	elseif key == inc_y then
+		player.y_dir = player.y_dir - 1
 	end
 end
 
@@ -32,12 +44,19 @@ function love.keyreleased(key)
 		player.rotation_dir = player.rotation_dir - 1
 	elseif key == rot_l then
 		player.rotation_dir = player.rotation_dir + 1
+	elseif key == inc_x then
+		player.x_dir = player.x_dir - 1
+	elseif key == dec_x then
+		player.x_dir = player.x_dir + 1
+	elseif key == dec_y then
+		player.y_dir = player.y_dir - 1
+	elseif key == inc_y then
+		player.y_dir = player.y_dir + 1
 	end
 end
 
 function love.update(dt)
-	player.rotation = player.rotation + player.rotation_dir * rotation_speed * dt
-
+	player.move(dt)
 	player.update()
 end
 
@@ -50,7 +69,7 @@ function love.draw()
 	end
 
 	if draw_shots == true then
-		
+
 	end
 end
 
