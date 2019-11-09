@@ -1,8 +1,6 @@
 win_w = 800	
 win_h = 600
 
-player = 0
-
 require("objects")
 
 -- KEYMAP
@@ -12,20 +10,30 @@ inc_x = "d"
 dec_x = "a"
 inc_y = "w"
 dec_y = "s"
+mode_see = "1"
+mode_move = "2"
+mode_attack = "3"
 
-stretch_speed = 600
 round_speed = 2
 rotation_speed = math.pi * 2  -- half a lap per second
 
 function love.load()
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
+	mode = mode_see -- initial mode
 end
 
 function love.keypressed(key)
+	-- Window management
 	if key == "escape" then
 		love.event.quit()
 	end
 
+	-- Modes
+	if key == mode_see or key == mode_move or key == mode_attack then
+	   mode = key
+    end
+
+	-- Movement
 	if key == rot_r then
 		player.rotation_dir = player.rotation_dir + 1
 	elseif key == rot_l then
@@ -67,6 +75,7 @@ draw_player = true
 draw_shots = false
 
 function love.draw()
+	love.graphics.print(mode, 300, 300)
 	if draw_player == true then
 		player:draw()
 		enemy:draw()
