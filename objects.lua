@@ -1,8 +1,8 @@
--- Spawn object
 function get_value(table, arg, default)
 	if table[arg] ~= nil then return table[arg] else return default end
 end
 
+-- Spawn object
 function spawn(object_type, args)
 	if object_type == "player" then
 		local player = {}
@@ -74,6 +74,29 @@ function draw_rectangle(object)
 	love.graphics.pop()
 end
 
+function draw_ellipse(object)
+	love.graphics.push()
+		love.graphics.translate(object.x, object.y)
+		love.graphics.rotate(object.rotation)
+		love.graphics.rectangle("line", - (object.width / 2), - (object.height / 2), 
+				object.width, object.height,
+				(object.width / 2),
+				(object.height / 2)
+		)
+	love.graphics.pop()
+end
+
+function draw_triangle(object)
+	love.graphics.push()
+		love.graphics.translate(object.x, object.y)
+		love.graphics.rotate(object.rotation)
+		vertices = {0, - object.height / 2,  
+					object.width / 2,  object.height / 2,
+					- object.width / 2,  object.height / 2}
+		love.graphics.polygon("line", vertices)
+	love.graphics.pop()
+end
+
 -- Update functions
 
 function rotate(object, dt)
@@ -89,4 +112,3 @@ end
 function update(object)
 
 end
--- TODO: Enforce that object has x, y, speed, dir, height, width, round, rotation...

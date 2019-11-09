@@ -1,4 +1,5 @@
 require("objects")
+require("modes")
 
 win_w = 800	
 win_h = 600
@@ -10,21 +11,35 @@ inc_x = "d"
 dec_x = "a"
 inc_y = "w"
 dec_y = "s"
+key_see = "1"
+key_move = "2"
+key_attack = "3"
 
 function love.load()
+	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
+	
+	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
+	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
+	rotation_speed = math.pi * 2  -- half a lap per second
+
+	mode = "mode"..key_see -- initial mode
+	player = spawn("player", {x = 60})
 	enemies = {}
 	shots = {}
-	rotation_speed = math.pi * 2  -- half a lap per second
-	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
-	player_args = {x = 60}
-	player = spawn("player", player_args)
 end
 
 function love.keypressed(key)
+	-- Window management
 	if key == "escape" then
 		love.event.quit()
 	end
 
+	-- Modes
+	if key == key_see or key == key_move or key == key_attack then
+	   mode = "mode"..key
+    end
+
+	-- Movement
 	if key == rot_r then
 		player.rotation_dir = player.rotation_dir + 1
 	elseif key == rot_l then
@@ -39,6 +54,7 @@ function love.keypressed(key)
 		player.y_dir = player.y_dir - 1
 	end
 
+	-- TODO: Only when in attack mode
 	if key == "space" then
 		shot_args = {}
 		shot_args.x = player.x
@@ -65,10 +81,8 @@ function love.keyreleased(key)
 end
 
 function love.update(dt)
-	player:move(dt)
-	player:rotate(dt)
-	player:update()
-
+	-- TODO: Move those calls into modes
+	modes[mode].func_update(dt)
 	for i, enemy in pairs(enemies) do
 		enemy:move(dt)
 		enemy:update()
@@ -81,8 +95,9 @@ function love.update(dt)
 end
 
 function love.draw()
-	player:draw()
+	modes[mode].func_draw()
 
+	-- TODO: Move those draw-calls into modes
 	for i, enemy in pairs(enemies) do
 		enemy:draw()
 	end
