@@ -2,6 +2,7 @@ win_w = 800
 win_h = 600
 
 require("objects")
+require("modes")
 
 -- KEYMAP
 rot_l = "j"
@@ -19,7 +20,10 @@ rotation_speed = math.pi * 2  -- half a lap per second
 
 function love.load()
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
-	mode = mode_see -- initial mode
+
+	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
+	modes = {mode1 = see, mode2 = move, mode3 = attack}
+	mode = "mode"..mode_see -- initial mode
 end
 
 function love.keypressed(key)
@@ -30,7 +34,7 @@ function love.keypressed(key)
 
 	-- Modes
 	if key == mode_see or key == mode_move or key == mode_attack then
-	   mode = key
+	   mode = "mode"..key
     end
 
 	-- Movement
@@ -75,7 +79,8 @@ draw_player = true
 draw_shots = false
 
 function love.draw()
-	love.graphics.print(mode, 300, 300)
+	modes[mode].draw()
+
 	if draw_player == true then
 		player:draw()
 		enemy:draw()
