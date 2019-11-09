@@ -62,6 +62,11 @@ function spawn(object_type, args)
 	-- if args.x != nil then x = args.x else x = 25 end
 end
 
+function init_objects()
+	player = spawn("player", {x = 60})
+	enemies = {}
+	shots = {}
+end
 
 -- Draw functions
 

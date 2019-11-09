@@ -9,7 +9,9 @@ mode_see = {func_draw = function()
 			  move(player,dt) 
 		  			rotate(player, dt)
 					update(player)
-				end
+				end,
+		  func_shoot = function()
+			  end
 			}
 
 mode_move = {func_draw = function() 
@@ -20,7 +22,9 @@ mode_move = {func_draw = function()
 				  move(player,dt) 
 						rotate(player, dt)
 						update(player)
-					end
+					end,
+			  func_shoot = function()
+			  end
 		   }
 
 mode_attack = {func_draw = function() 
@@ -31,6 +35,13 @@ mode_attack = {func_draw = function()
 				  move(player,dt) 
 						rotate(player, dt)
 						update(player)
+					end,
+			  func_shoot = function()
+						shot_args = {}
+						shot_args.x = player.x
+						shot_args.y = player.y
+						shot_args.rotation = player.rotation - math.pi / 2
+						shots[#shots + 1] = spawn("shot", shot_args)
 					end
 			 }
 

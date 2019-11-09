@@ -1,9 +1,6 @@
 require("objects")
 require("modes")
 
-win_w = 800	
-win_h = 600
-
 -- KEYMAP
 rot_l = "j"
 rot_r = "k"
@@ -16,16 +13,17 @@ key_move = "2"
 key_attack = "3"
 
 function love.load()
+	win_w = 800	
+	win_h = 600
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
 	
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
 	rotation_speed = math.pi * 2  -- half a lap per second
 
+	init_objects()
 	mode = "mode"..key_see -- initial mode
-	player = spawn("player", {x = 60})
-	enemies = {}
-	shots = {}
+
 end
 
 function love.keypressed(key)
@@ -56,11 +54,7 @@ function love.keypressed(key)
 
 	-- TODO: Only when in attack mode
 	if key == "space" then
-		shot_args = {}
-		shot_args.x = player.x
-		shot_args.y = player.y
-		shot_args.rotation = player.rotation - math.pi / 2
-		shots[#shots + 1] = spawn("shot", shot_args)
+		modes[mode].func_shoot()
 	end
 end
 
