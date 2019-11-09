@@ -17,6 +17,7 @@ function spawn(object_type, args)
 		player.rotation = 0
 		player.rotation_dir = 0
 		player.round = 0
+		player.filling = "line"
 		player.move = get_value(args, "move", move)
 		player.rotate = get_value(args, "rotate", rotate)
 		player.update = get_value(args, "update", update)
@@ -34,7 +35,8 @@ function spawn(object_type, args)
 		enemy.width = get_value(args, "width", 80)
 		enemy.rotation = get_value(args, "rotation", 0)
 		enemy.rotation_dir = 0
-		enemy.round = 1 
+		enemy.round = 0 
+		enemy.filling = "fill"
 		enemy.draw = get_value(args, "draw", draw_rectangle)
 		enemy.move = get_value(args, "move", move)
 		enemy.update = get_value(args, "update", update)
@@ -48,9 +50,10 @@ function spawn(object_type, args)
 		shot.speed = get_value(args, "speed", 400)
 		shot.x_speed = shot.speed * math.cos(shot.rotation)
 		shot.y_speed = shot.speed * math.sin(shot.rotation)
-		shot.width = get_value(args, "width", 20)
-		shot.height = get_value(args, "height", 20)
-		shot.round = 0
+		shot.width = get_value(args, "width", 16)
+		shot.height = get_value(args, "height", 16)
+		shot.round = 1
+		shot.filling = "fill"
 		shot.move = get_value(args, "move", move)
 		shot.update = get_value(args, "update", update)
 		shot.draw = get_value(args, "draw", draw_rectangle)
@@ -66,7 +69,7 @@ function draw_rectangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle("line", - (object.width / 2), - (object.height / 2), 
+		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), 
 				object.width, object.height,
 				(object.width / 2) * object.round,
 				(object.height / 2) * object.round
@@ -78,7 +81,7 @@ function draw_ellipse(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle("line", - (object.width / 2), - (object.height / 2), 
+		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), 
 				object.width, object.height,
 				(object.width / 2),
 				(object.height / 2)
@@ -93,7 +96,7 @@ function draw_triangle(object)
 		vertices = {0, - object.height / 2,  
 					object.width / 2,  object.height / 2,
 					- object.width / 2,  object.height / 2}
-		love.graphics.polygon("line", vertices)
+		love.graphics.polygon(object.filling, vertices)
 	love.graphics.pop()
 end
 
