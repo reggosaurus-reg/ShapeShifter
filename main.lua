@@ -16,6 +16,7 @@ function love.load()
 	shots = {}
 	rotation_speed = math.pi * 2  -- half a lap per second
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
+	player_args = {x = 60}
 	player = spawn("player", player_args)
 end
 
