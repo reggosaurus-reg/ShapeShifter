@@ -68,6 +68,8 @@ end
 function init_objects()
 	player = spawn("player", {x = 60})
 	enemies = {}
+	enemy_interval = 2 -- Seconds between enemy spawning
+	start_time = love.timer.getTime() -- Can use getMicroTime for microsessions
 	shots = {}
 end
 

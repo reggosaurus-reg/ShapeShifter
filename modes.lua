@@ -45,7 +45,6 @@ mode_attack = {
 	end,
 	func_shoot = function()
 		spawn_shot()
-		spawn_enemy() -- TODO: Move into some interval function
 	end
 }
 
@@ -65,6 +64,10 @@ function update_other_objects(dt)
 	for i, shot in pairs(shots) do
 		shot:move(dt)
 		shot:update()
+	end
+	if love.timer.getTime() - start_time > enemy_interval then
+		start_time = love.timer.getTime()
+		spawn_enemy()
 	end
 	for i, enemy in pairs(enemies) do
 		enemy:move(dt)
