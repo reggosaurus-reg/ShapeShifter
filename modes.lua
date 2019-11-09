@@ -4,7 +4,7 @@ mode_see = {func_draw = function()
 				love.graphics.print("SEE", 0, 0)
 				draw_ellipse(player)
 				draw_shot()
-				--enemy:draw()
+				draw_enemies()
 			  end,
 		  func_update = function(dt) 
 			  		--move(player,dt) 
@@ -34,6 +34,7 @@ mode_attack = {func_draw = function()
 				   love.graphics.print("ATTACK", 0, 0)
 				   draw_triangle(player) 
 				   draw_shot()
+				   draw_enemies()
 			     end,
 			  func_update = function(dt) 
 				  		--move(player,dt) 
@@ -42,17 +43,20 @@ mode_attack = {func_draw = function()
 						update_other_objects(dt)
 					end,
 			  func_shoot = function()
-						shot_args = {}
-						shot_args.x = player.x
-						shot_args.y = player.y
-						shot_args.rotation = player.rotation - math.pi / 2
-						shots[#shots + 1] = spawn("shot", shot_args)
+				  		spawn_shot()
+				  		spawn_enemy() -- TODO: Move into some interval function
 					end
 			 }
 
 function draw_shot()
 	for i, shot in pairs(shots) do
 		shot:draw()
+	end
+end
+
+function draw_enemies()
+	for i, enemy in pairs(enemies) do
+		enemy:draw()
 	end
 end
 

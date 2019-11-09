@@ -52,7 +52,6 @@ function love.keypressed(key)
 		player.y_dir = player.y_dir - 1
 	end
 
-	-- TODO: Only when in attack mode
 	if key == "space" then
 		modes[mode].func_shoot()
 	end
@@ -81,11 +80,5 @@ end
 
 function love.draw()
 	modes[mode].func_draw()
-
-	-- TODO: Move those draw-calls into modes
-	for i, enemy in pairs(enemies) do
-		enemy:draw()
-	end
-
 end
 

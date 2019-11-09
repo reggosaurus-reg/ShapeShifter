@@ -24,7 +24,7 @@ function spawn(object_type, args)
 		player.draw = get_value(args, "draw", draw_rectangle)
 		return player
 	elseif object_type == "enemy" then
-		enemy = {}
+		local enemy = {}
 		enemy.x = get_value(args, "x", 0) 
 		enemy.y = get_value(args, "y", 0)
 		enemy.x_speed = get_value(args, "x_speed", 100)
@@ -40,6 +40,7 @@ function spawn(object_type, args)
 		enemy.draw = get_value(args, "draw", draw_rectangle)
 		enemy.move = get_value(args, "move", move)
 		enemy.update = get_value(args, "update", update)
+		return enemy
 	elseif object_type == "shot" then
 		local shot = {}
 		shot.x = get_value(args, "x", 200)
@@ -62,10 +63,28 @@ function spawn(object_type, args)
 	-- if args.x != nil then x = args.x else x = 25 end
 end
 
+-- Creation functions 
+
 function init_objects()
 	player = spawn("player", {x = 60})
 	enemies = {}
 	shots = {}
+end
+
+function spawn_shot()
+	local args = {}
+	args.x = player.x
+	args.y = player.y
+	args.rotation = player.rotation - math.pi / 2
+	shots[#shots + 1] = spawn("shot", args)
+end
+
+function spawn_enemy()
+	local args = {}
+ 	-- TODO: Randomize
+	-- TODO: Relative position - towards player?
+	enemies[#enemies + 1] = spawn("enemy", args)
+
 end
 
 -- Draw functions
