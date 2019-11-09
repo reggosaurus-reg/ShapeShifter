@@ -59,7 +59,7 @@ function love.keypressed(key)
 		shot_args = {}
 		shot_args.x = player.x
 		shot_args.y = player.y
-		shot_args.rotation = player.rotation + math.pi / 2
+		shot_args.rotation = player.rotation - math.pi / 2
 		shots[#shots + 1] = spawn("shot", shot_args)
 	end
 end
