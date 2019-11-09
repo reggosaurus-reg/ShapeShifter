@@ -29,8 +29,8 @@ function spawn(object_type, args)
 		enemy.y = get_value(args, "y", 0)
 		enemy.x_speed = get_value(args, "x_speed", 100)
 		enemy.y_speed = get_value(args, "y_speed", 100)
-		enemy.x_dir = 1
-		enemy.y_dir = 1
+		enemy.x_dir = get_value(args, "x_dir", 1)
+		enemy.y_dir = get_value(args, "y_dir", 1)
 		enemy.height = get_value(args, "height", 80) 
 		enemy.width = get_value(args, "width", 80)
 		enemy.rotation = get_value(args, "rotation", 0)
@@ -67,9 +67,13 @@ end
 
 function init_objects()
 	player = spawn("player", {x = 60})
+
 	enemies = {}
 	enemy_interval = 2 -- Seconds between enemy spawning
 	start_time = love.timer.getTime() -- Can use getMicroTime for microsessions
+	min_speed = 100
+	max_speed = 200
+
 	shots = {}
 end
 
@@ -83,8 +87,37 @@ end
 
 function spawn_enemy()
 	local args = {}
- 	-- TODO: Randomize
-	-- TODO: Relative position - towards player?
+
+	-- to only spawn on borders
+	math.randomseed(os.time())
+	wall_or_roof = random_of_two(0, 1) 
+	left_or_right = random_of_two(0, 1)
+	--- wall
+	if wall_or_roof == 0 then
+		args.x = random_of_two(0, win_w)
+		args.y = math.random(win_h)
+	--- roof
+	else 
+		args.x = math.random(win_w)
+		args.y = random_of_two(0, win_h)
+	end
+
+	-- to move towards the other end of the screen
+	if args.x < win_w / 2 then
+		args.x_dir = 1
+	else
+		args.x_dir = -1
+	end
+
+	if args.y < win_h / 2 then
+		args.y_dir = 1
+	else
+		args.y_dir = -1
+	end
+	
+	args.x_speed = math.random(min_speed, max_speed) -- TODO: Change max/ min when "levelup"
+	args.y_speed = math.random(min_speed, max_speed)
+
 	enemies[#enemies + 1] = spawn("enemy", args)
 
 end
@@ -140,4 +173,12 @@ end
 
 function update(object)
 
+end
+
+function random_of_two(a, b)
+	if math.random(0, 1) == 0 then
+		return a
+	else 
+		return b
+	end
 end
