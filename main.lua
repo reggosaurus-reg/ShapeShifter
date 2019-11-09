@@ -75,17 +75,8 @@ function love.keyreleased(key)
 end
 
 function love.update(dt)
-	-- TODO: Move those calls into modes
 	modes[mode].func_update(dt)
-	for i, enemy in pairs(enemies) do
-		enemy:move(dt)
-		enemy:update()
-	end
 
-	for i, shot in pairs(shots) do
-		shot:move(dt)
-		shot:update()
-	end
 end
 
 function love.draw()
@@ -96,8 +87,5 @@ function love.draw()
 		enemy:draw()
 	end
 
-	for i, shot in pairs(shots) do
-		shot:draw()
-	end
 end
 
