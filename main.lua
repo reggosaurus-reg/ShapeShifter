@@ -75,5 +75,8 @@ function love.draw()
 	if draw_shots == true then
 
 	end
+	
+	-- static enemy
+	love.graphics.rectangle("fill", 100, 100, 80, 80)
 end
 
