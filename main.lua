@@ -1,12 +1,8 @@
 require("player")
 
 -- KEYMAP
-stretch_pos = "j"
-stretch_neg = "k"
-round_inc = "l"
-round_dec = "h"
-rot_l = "a"
-rot_r = "d"
+rot_l = "j"
+rot_r = "k"
 
 win_w = 800	
 win_h = 800
