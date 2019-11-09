@@ -19,8 +19,6 @@ function love.load()
 
 	big_font = love.graphics.newFont("yf16font.ttf", 55)
 	medium_font = love.graphics.newFont("yf16font.ttf", 15)
-	small_font = love.graphics.newFont(15)
-	small_font:setFilter( "nearest", "nearest" )
 	medium_font:setFilter( "nearest", "nearest" )
 	big_font:setFilter( "nearest", "nearest" )
 
@@ -41,6 +39,7 @@ function love.keypressed(key)
 		if key == "escape" then
 			close_game()
 		end
+			-- TODO: call this then player dies... love.keypressed("escape")
 		-- Modes
 		if key == key_see or key == key_move or key == key_attack then
 			mode = "mode"..key
@@ -101,13 +100,23 @@ end
 function love.draw()
 	if game_running then
 		modes[mode].func_draw()
-		game_time = math.ceil(love.timer.getTime() - game_start_time)
-	love.graphics.setFont(medium_font)
-		love.graphics.print(game_time, 
-							win_w - medium_font:getWidth(game_time) - 10, 5)
-	love.graphics.setFont(small_font)
+		game_time = math.ceil((love.timer.getTime() - game_start_time)*100) / 100
+		love.graphics.print(time_to_string(game_time), 
+							win_w - medium_font:
+									getWidth(time_to_string(game_time)) - 10, 5)
 	else
 		show_startscreen()
+	end
+end
+
+function time_to_string(time)
+	local time = ""..time
+	if #time == 1 then
+		return time..".00"
+	elseif #time== 3 then
+		return time.."0"
+	else 
+		return time
 	end
 end
 
