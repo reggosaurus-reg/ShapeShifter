@@ -1,13 +1,13 @@
 function draw_rectangle()
-    love.graphics.push()
-        love.graphics.translate(win_w / 2, win_h / 2)
-        love.graphics.rotate(player.rotation)
-        love.graphics.rectangle("line", - (player.width / 2), - (player.height / 2), 
-                player.width, player.height,
-                (player.width / 2) * player.round,
-                (player.height / 2) * player.round
-        )
-    love.graphics.pop()
+	love.graphics.push()
+	love.graphics.translate(win_w / 2, win_h / 2)
+	love.graphics.rotate(player.rotation)
+	love.graphics.rectangle("line", - (player.width / 2), - (player.height / 2), 
+	player.width, player.height,
+	(player.width / 2) * player.round,
+	(player.height / 2) * player.round
+	)
+	love.graphics.pop()
 end
 
 player = {}
@@ -27,6 +27,6 @@ function player.move(x, y, rot)
 end
 
 function player.update()
-    player.x = (win_h - player.width) / 2
+	player.x = (win_h - player.width) / 2
 	player.y = (win_w - player.height) / 2
 end
