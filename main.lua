@@ -16,7 +16,17 @@ function love.load()
 	win_w = 800	
 	win_h = 600
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
+
+	big_font = love.graphics.newFont("yf16font.ttf", 55)
+	medium_font = love.graphics.newFont("yf16font.ttf", 15)
+	small_font = love.graphics.newFont(15)
+	small_font:setFilter( "nearest", "nearest" )
+	medium_font:setFilter( "nearest", "nearest" )
+	big_font:setFilter( "nearest", "nearest" )
+
 	game_running = false
+	hs_holder = "A. Nonymous"
+	highscore = 0
 	
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
@@ -27,12 +37,10 @@ function love.load()
 end
 
 function love.keypressed(key)
-	-- Window management
-	if key == "escape" then
-		love.event.quit()
-	end
-
 	if game_running then
+		if key == "escape" then
+			close_game()
+		end
 		-- Modes
 		if key == key_see or key == key_move or key == key_attack then
 			mode = "mode"..key
@@ -58,9 +66,10 @@ function love.keypressed(key)
 		end
 
 	else
-		if key == "space" or key == "return" then
-			game_running = true
-			init_objects()
+		if key == "escape" then
+			love.event.quit()
+		elseif key == "space" or key == "return" then
+			init_game()
 		end
 	end
 end
@@ -92,38 +101,47 @@ end
 function love.draw()
 	if game_running then
 		modes[mode].func_draw()
+		game_time = math.ceil(love.timer.getTime() - game_start_time)
+	love.graphics.setFont(medium_font)
+		love.graphics.print(game_time, 
+							win_w - medium_font:getWidth(game_time) - 10, 5)
+	love.graphics.setFont(small_font)
 	else
 		show_startscreen()
 	end
 end
 
+function init_game()
+	game_running = true
+	init_objects()
+	game_start_time = love.timer.getTime()
+end
+
+function close_game()
+	game_running = false
+	highscore = math.max(highscore, game_time) 
+end
+
 function show_startscreen()
-	highscore = 0
-	hs_holder = "A. Nonymous"
 	-- Setup
-	big_font = love.graphics.newFont("yf16font.ttf", 55)
-	small_font = love.graphics.newFont(15)
-	small_font:setFilter( "nearest", "nearest" )
-	big_font:setFilter( "nearest", "nearest" )
 	local title = "Shape Shifter"
 	local start_text = "Press <space> to start game!"
-	local hs_text = "Current highscore is "..highscore.." by "..hs_holder
+	local hs_text = "Current highscore is "..highscore.." seconds by "..hs_holder
 	local w_title = big_font:getWidth(title)
-	local w_text = small_font:getWidth(start_text)
-	local w_hs = small_font:getWidth(hs_text)
+	local w_text = medium_font:getWidth(start_text)
+	local w_hs = medium_font:getWidth(hs_text)
 	local w = 60
 	local h = 40
 	local x = (win_w - w) / 2
-	local y = 2*win_h / 4
+	local y = 1.7*win_h / 4
 	local dist = 90	
 
 	-- Print 
 	love.graphics.setFont(big_font)
-	love.graphics.print(title, (win_w - w_title) / 2, win_h / 4)
+	love.graphics.print(title, (win_w - w_title) / 2, 0.7*win_h / 4)
 
-	love.graphics.setFont(small_font)
-	love.graphics.print(hs_text, (win_w - w_hs) / 2, 
-								y + 2*h)
+	love.graphics.setFont(medium_font)
+	love.graphics.print(hs_text, (win_w - w_hs) / 2, y + 2*h)
 	
 	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
 	love.graphics.rectangle("line", x, y, w, h, 0, 0) 
@@ -131,5 +149,5 @@ function show_startscreen()
 									x + dist, y + h, 
 									x + w + dist, y + h/2}) 
 
-	love.graphics.print(start_text, (win_w - w_text) / 2, 3.5*win_h / 4)
+	love.graphics.print(start_text, (win_w - w_text) / 2, 3.2*win_h / 4)
 end

@@ -2,7 +2,6 @@ require("objects")
 
 mode_see = {
 	func_draw = function() 
-		love.graphics.print("SEE", 0, 0)
 		draw_ellipse(player)
 		draw_shot()
 		draw_enemies()
@@ -18,7 +17,6 @@ mode_see = {
 
 mode_move = {
 	func_draw = function() 
-		love.graphics.print("MOVE", 0, 0)
 		draw_rectangle(player) 
 	end,
 	func_update = function(dt) 
@@ -33,7 +31,6 @@ mode_move = {
 
 mode_attack = {
 	func_draw = function() 
-		love.graphics.print("ATTACK", 0, 0)
 		draw_triangle(player) 
 		draw_shot()
 		draw_enemies()
