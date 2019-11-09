@@ -1,3 +1,65 @@
+-- Spawn object
+function get_value(table, arg, default)
+	if table[arg] ~= nil then return table[arg] else return default end
+end
+
+function spawn(object_type, args)
+	if object_type == "player" then
+		local player = {}
+		player.x = get_value(args, "x", win_w / 2)
+		player.y = get_value(args, "y", win_h / 2)
+		player.x_speed = get_value(args, "x_speed", 300)
+		player.y_speed = get_value(args, "y_speed", 300)
+		player.x_dir = 0
+		player.y_dir = 0
+		player.height = get_value(args, "height", 60)
+		player.width = get_value(args, "width", 60)
+		player.rotation = 0
+		player.rotation_dir = 0
+		player.round = 0
+		player.move = get_value(args, "move", move)
+		player.rotate = get_value(args, "rotate", rotate)
+		player.update = get_value(args, "update", update)
+		player.draw = get_value(args, "draw", draw_rectangle)
+		return player
+	elseif object_type == "enemy" then
+		enemy = {}
+		enemy.x = get_value(args, "x", 0) 
+		enemy.y = get_value(args, "y", 0)
+		enemy.x_speed = get_value(args, "x_speed", 100)
+		enemy.y_speed = get_value(args, "y_speed", 100)
+		enemy.x_dir = 1
+		enemy.y_dir = 1
+		enemy.height = get_value(args, "height", 80) 
+		enemy.width = get_value(args, "width", 80)
+		enemy.rotation = get_value(args, "rotation", 0)
+		enemy.rotation_dir = 0
+		enemy.round = 1 
+		enemy.draw = get_value(args, "draw", draw_rectangle)
+		enemy.move = get_value(args, "move", move)
+		enemy.update = get_value(args, "update", update)
+	elseif object_type == "shot" then
+		local shot = {}
+		shot.x = get_value(args, "x", 200)
+		shot.y = get_value(args, "y", 200)
+		shot.x_dir = 1
+		shot.y_dir = 1
+		shot.rotation = get_value(args, "rotation", 0)
+		shot.speed = get_value(args, "speed", 400)
+		shot.x_speed = shot.speed * math.cos(shot.rotation)
+		shot.y_speed = shot.speed * math.sin(shot.rotation)
+		shot.width = get_value(args, "width", 20)
+		shot.height = get_value(args, "height", 20)
+		shot.round = 0
+		shot.move = get_value(args, "move", move)
+		shot.update = get_value(args, "update", update)
+		shot.draw = get_value(args, "draw", draw_rectangle)
+		return shot
+	end
+	-- if args.x != nil then x = args.x else x = 25 end
+end
+
+
 -- Draw functions
 
 function draw_rectangle(object)
@@ -14,53 +76,18 @@ end
 
 -- Update functions
 
-function move(object, dt)
+function rotate(object, dt)
 	object.rotation = object.rotation + object.rotation_dir * rotation_speed * dt
-	
+end
+
+function move(object, dt)
 	-- if object.canMove()
 	object.x = object.x + object.x_dir * object.x_speed * dt
 	object.y = object.y + object.y_dir * object.y_speed * dt
+	if object.rotate ~= nil then object:rotate(dt) end
 end
 
 function update(object)
 
 end
 -- TODO: Enforce that object has x, y, speed, dir, height, width, round, rotation...
-
--- Player data
-player = {}
-player.x = win_w / 2
-player.y = win_h / 2
-player.x_speed = 300
-player.y_speed = 300
-player.x_dir = 0
-player.y_dir = 0
-player.height = 120
-player.width = 80
-player.rotation = 0  -- radians
-player.rotation_dir = 0
-player.round = 0  -- andel: 0 = kvadrat, 1 = cirkel/ellips
-
--- Player functions
-player.draw = draw_rectangle
-player.move = move
-player.update = update
-
--- Enemy data
-enemy = {}
-enemy.x = 0	 
-enemy.y = 0 
-enemy.x_speed = 100
-enemy.y_speed = 100
-enemy.x_dir = 1
-enemy.y_dir = 1
-enemy.height = 80 
-enemy.width = 80
-enemy.rotation = 0  
-enemy.rotation_dir = 0
-enemy.round = 1 
-
--- Enemy functions
-enemy.draw = draw_rectangle
-enemy.move = move
-enemy.update = update
