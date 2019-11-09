@@ -28,11 +28,10 @@ function draw_triangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle("line", - (object.width / 2), - (object.height / 2), 
-				object.width, object.height,
-				(object.width / 2) * object.round,
-				(object.height / 2) * object.round
-		)
+		vertices = {0, - object.height / 2,  
+					object.width / 2,  object.height / 2,
+					- object.width / 2,  object.height / 2}
+		love.graphics.polygon("line", vertices)
 	love.graphics.pop()
 end
 
