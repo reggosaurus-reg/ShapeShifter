@@ -6,8 +6,8 @@ round_dec = "h"
 rot_l = "a"
 rot_r = "d"
 
-win_w = 1000
-win_h = 1000
+win_w = 800	
+win_h = 800
 
 stretch_speed = 600
 round_speed = 2
@@ -32,6 +32,9 @@ function calcPlayer()
 end
 
 function love.keypressed(key)
+	if key == "escape" then
+		love.event.quit()
+	end
 	if key == "space" then
 		print(player.width)
 		print(player.width / 2)
