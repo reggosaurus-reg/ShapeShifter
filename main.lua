@@ -1,5 +1,6 @@
-require("objects")
+HC = require("hardoncollider")
 require("modes")
+require("objects")
 
 win_w = 800	
 win_h = 600
@@ -17,6 +18,7 @@ key_attack = "3"
 
 function love.load()
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
+	collider = HC(100, on_collide)
 	
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
@@ -80,7 +82,28 @@ function love.keyreleased(key)
 	end
 end
 
+function get_type_from_shape(shape, objects)
+	for i, object in objects do
+		if object.shape == shape then return object.object_type end
+	end
+	return nil
+end
+
+function on_collide(dt, shape_a, shape_b)
+	print("colliding!")
+	if get_type_from_shape(shape_a) == "enemy" or get_type_from_shape(shape_b) == "enemy" then
+		if get_type_from_shape(shape_a) == "player" or get_type_from_shape(shape_b) == "player" then
+			print("colliding player")
+		elseif get_type_from_shape(shape_a) == "shot" or get_type_from_shape(shape_b) == "shot" then
+				print("colliding shot")
+		end
+	end
+end
+
 function love.update(dt)
+	print(collider)
+	collider:update(dt)
+	
 	-- TODO: Move those calls into modes
 	modes[mode].func_update(dt)
 	for i, enemy in pairs(enemies) do

@@ -6,6 +6,7 @@ end
 function spawn(object_type, args)
 	if object_type == "player" then
 		local player = {}
+		player.object_type = object_type
 		player.x = get_value(args, "x", win_w / 2)
 		player.y = get_value(args, "y", win_h / 2)
 		player.x_speed = get_value(args, "x_speed", 300)
@@ -25,6 +26,7 @@ function spawn(object_type, args)
 		return player
 	elseif object_type == "enemy" then
 		enemy = {}
+		enemy.object_type = object_type
 		enemy.x = get_value(args, "x", 0) 
 		enemy.y = get_value(args, "y", 0)
 		enemy.x_speed = get_value(args, "x_speed", 100)
@@ -37,11 +39,13 @@ function spawn(object_type, args)
 		enemy.rotation_dir = 0
 		enemy.round = 0 
 		enemy.filling = "fill"
+		enemy.shape = collider:addCircle(enemy.x, enemy.y, 40)
 		enemy.draw = get_value(args, "draw", draw_rectangle)
 		enemy.move = get_value(args, "move", move)
 		enemy.update = get_value(args, "update", update)
 	elseif object_type == "shot" then
 		local shot = {}
+		shot.object_type = object_type
 		shot.x = get_value(args, "x", 200)
 		shot.y = get_value(args, "y", 200)
 		shot.x_dir = 1
@@ -54,12 +58,12 @@ function spawn(object_type, args)
 		shot.height = get_value(args, "height", 16)
 		shot.round = 1
 		shot.filling = "fill"
+		shot.shape = collider:addCircle(shot.x, shot.y, 8)
 		shot.move = get_value(args, "move", move)
 		shot.update = get_value(args, "update", update)
 		shot.draw = get_value(args, "draw", draw_rectangle)
 		return shot
 	end
-	-- if args.x != nil then x = args.x else x = 25 end
 end
 
 
