@@ -98,26 +98,38 @@ function love.draw()
 end
 
 function show_startscreen()
-	big_font = love.graphics.newFont(55)
+	highscore = 0
+	hs_holder = "A. Nonymous"
+	-- Setup
+	big_font = love.graphics.newFont("yf16font.ttf", 55)
 	small_font = love.graphics.newFont(15)
-	local title = "ShapeShifter"
+	small_font:setFilter( "nearest", "nearest" )
+	big_font:setFilter( "nearest", "nearest" )
+	local title = "Shape Shifter"
 	local start_text = "Press <space> to start game!"
+	local hs_text = "Current highscore is "..highscore.." by "..hs_holder
 	local w_title = big_font:getWidth(title)
 	local w_text = small_font:getWidth(start_text)
-	love.graphics.setFont(big_font)
-	love.graphics.print(title, (win_w - w_title) / 2, win_h / 4)
-	love.graphics.setFont(small_font)
-	love.graphics.print(start_text, (win_w - w_text) / 2, 3*win_h / 4)
-
-	-- TODO: Only looks good on my screen - make relative window size
+	local w_hs = small_font:getWidth(hs_text)
 	local w = 60
 	local h = 40
-	local x = (win_w - w_title) / 2 + 50
+	local x = (win_w - w) / 2
 	local y = 2*win_h / 4
 	local dist = 90	
-	love.graphics.rectangle("line", x, y, w, h, w/2, h/2) 
-	love.graphics.rectangle("line", x + dist, y, w, h, 0, 0) 
-	love.graphics.polygon("line", {x + 2*dist, y, 
-									x + 2*dist, y + h, 
-									x + 2*dist + w, y + h/2}) 
+
+	-- Print 
+	love.graphics.setFont(big_font)
+	love.graphics.print(title, (win_w - w_title) / 2, win_h / 4)
+
+	love.graphics.setFont(small_font)
+	love.graphics.print(hs_text, (win_w - w_hs) / 2, 
+								y + 2*h)
+	
+	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
+	love.graphics.rectangle("line", x, y, w, h, 0, 0) 
+	love.graphics.polygon("line", {x + dist, y, 
+									x + dist, y + h, 
+									x + w + dist, y + h/2}) 
+
+	love.graphics.print(start_text, (win_w - w_text) / 2, 3.5*win_h / 4)
 end
