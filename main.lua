@@ -1,7 +1,9 @@
 win_w = 800	
-win_h = 800
+win_h = 600
 
-require("player")
+player = 0
+
+require("objects")
 
 -- KEYMAP
 rot_l = "j"
@@ -56,8 +58,9 @@ function love.keyreleased(key)
 end
 
 function love.update(dt)
-	player.move(dt)
-	player.update()
+	player:move(dt)
+	enemy:move(dt)
+	player:update()
 end
 
 draw_player = true
@@ -65,7 +68,8 @@ draw_shots = false
 
 function love.draw()
 	if draw_player == true then
-		player.draw()
+		player:draw()
+		enemy:draw()
 	end
 
 	if draw_shots == true then
