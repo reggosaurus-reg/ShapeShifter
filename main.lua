@@ -23,7 +23,7 @@ function love.load()
 
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = see, mode2 = move, mode3 = attack}
-	mode = "mode"..mode_attack -- initial mode
+	mode = "mode"..mode_see -- initial mode
 end
 
 function love.keypressed(key)

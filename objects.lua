@@ -12,6 +12,30 @@ function draw_rectangle(object)
 	love.graphics.pop()
 end
 
+function draw_ellipse(object)
+	love.graphics.push()
+		love.graphics.translate(object.x, object.y)
+		love.graphics.rotate(object.rotation)
+		love.graphics.rectangle("line", - (object.width / 2), - (object.height / 2), 
+				object.width, object.height,
+				(object.width / 2),
+				(object.height / 2)
+		)
+	love.graphics.pop()
+end
+
+function draw_triangle(object)
+	love.graphics.push()
+		love.graphics.translate(object.x, object.y)
+		love.graphics.rotate(object.rotation)
+		love.graphics.rectangle("line", - (object.width / 2), - (object.height / 2), 
+				object.width, object.height,
+				(object.width / 2) * object.round,
+				(object.height / 2) * object.round
+		)
+	love.graphics.pop()
+end
+
 -- Update functions
 
 function move(object, dt)
@@ -42,7 +66,7 @@ player.rotation_dir = 0
 player.round = 0  -- andel: 0 = kvadrat, 1 = cirkel/ellips
 
 -- Player functions
-player.draw = draw_rectangle
+--player.draw = draw_rectangle
 player.move = move
 player.update = update
 
