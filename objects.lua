@@ -84,7 +84,6 @@ function move(object, dt)
 	-- if object.canMove()
 	object.x = object.x + object.x_dir * object.x_speed * dt
 	object.y = object.y + object.y_dir * object.y_speed * dt
-	if object.rotate ~= nil then object:rotate(dt) end
 end
 
 function update(object)
