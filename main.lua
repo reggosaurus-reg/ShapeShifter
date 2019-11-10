@@ -68,7 +68,9 @@ function love.keypressed(key)
 			state = "start"
 		end
 		if key == "backspace" and #hs_holder > 0 then
-				hs_holder = hs_holder:sub(1,#hs_holder - 1)
+			if love.keyboard.isDown("lctrl") then hs_holder = "" else
+				hs_holder = hs_holder:sub(1, #hs_holder - 1)
+			end
 		end
 		if string.find(alphabet, key) then
 			if #hs_holder < 20 then
