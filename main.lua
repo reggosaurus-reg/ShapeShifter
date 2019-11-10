@@ -33,6 +33,9 @@ function love.keypressed(key)
 	if state == "game_running" then
 		if key == "escape" then
 			state = "start"
+			music_penta:stop()
+			music_western:stop()
+			music_bergakung:play()
 		end
 		if key == "9" then
 		end
