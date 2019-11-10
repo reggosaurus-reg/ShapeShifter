@@ -44,7 +44,7 @@ function spawn(object_type, args)
 		enemy.round = 0 
 		enemy.filling = "fill"
 		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
-		enemy.draw = get_value(args, "draw", draw_rectangle)
+		enemy.draw = get_value(args, "draw", draw_single_rectangle)
 		enemy.move = get_value(args, "move", move)
 		enemy.update = get_value(args, "update", update)
 		return enemy
@@ -127,13 +127,19 @@ function spawn_enemy()
 	args.x_speed = math.random(min_speed, max_speed) -- TODO: Change max/ min when "levelup"
 	args.y_speed = math.random(min_speed, max_speed)
 
-	enemies[#enemies + 1] = spawn("enemy", args)
+	return spawn("enemy", args)
+end
 
-	sound_enemy_spawn:play()
+function spawn_invinc_enemy()
+	local enemy = spawn_enemy()
+	enemy.object_type = "invinc"
+	enemy.filling = "line"
+	enemy.x_speed = enemy.x_speed * 2
+	enemy.y_speed = enemy.y_speed * 2
+	return enemy
 end
 
 -- Draw functions
-
 function draw_rectangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
@@ -142,6 +148,14 @@ function draw_rectangle(object)
 			love.graphics.rectangle(object.filling, x, y, w, h)
 		end
 		draw_subs(object, sub_rectangle)
+	love.graphics.pop()
+end
+
+function draw_single_rectangle(object)
+	love.graphics.push()
+		love.graphics.translate(object.x, object.y)
+		love.graphics.rotate(object.rotation)
+		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), object.width, object.height)
 	love.graphics.pop()
 end
 

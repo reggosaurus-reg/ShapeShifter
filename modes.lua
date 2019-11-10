@@ -11,7 +11,7 @@ mode_see = {
 	func_key_released = stop_rotate_on_key,
 	func_update = function(dt) 
 		reset_movements()
-		rotate(player, dt)
+		player:rotate(dt)
 		update(player)
 		update_other_objects(dt)
 	end,
@@ -27,7 +27,7 @@ mode_move = {
 	func_key_released = stop_move_on_key,
 	func_update = function(dt) 
 		reset_rotations()
-		move(player,dt) 
+		move(player, dt)
 		update(player)
 		update_other_objects(dt)
 	end,
@@ -80,8 +80,13 @@ function update_other_objects(dt)
 	if enemies_spawned < math.floor(game_time / enemy_spawn_interval) then
 		-- e.g. game_time = 6.01 => game_time / enemy_interval = 3.005
 		-- so if enemies_spawned == 2 then spawn 
+		sound_enemy_spawn:play()
 		enemies_spawned = enemies_spawned + 1
-		spawn_enemy()
+		if game_time > 60 then
+			enemies[#enemies + 1] = random_of_two(spawn_enemy(), spawn_invinc_enemy())
+		else
+			enemies[#enemies + 1] = spawn_enemy()
+		end
 	end
 	for i, enemy in pairs(enemies) do
 		enemy:move(dt)

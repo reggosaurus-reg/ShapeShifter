@@ -104,9 +104,11 @@ function love.update(dt)
 		for i, shot in pairs(shots) do
 			for j, enemy in pairs(enemies) do
 				if collision.collisionTest(shot.shape, enemy.shape) then
-					sound_enemy_hit:play()
-					table.remove(shots, i)
-					table.remove(enemies, j)
+					if enemy.object_type ~= "invinc" then
+						sound_enemy_hit:play()
+						table.remove(shots, i)
+						table.remove(enemies, j)
+					end
 				end
 			end
 		end
