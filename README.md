@@ -13,7 +13,7 @@ Created during LiU Fall GameJam 2019.
 
 Programming: Gustav Sörnäs and Regina Hansson  
 
-Music & sounds: Gustav's friend Tore
+Music & sounds: Gustav's friend Tore Nylén
 
 Collision from Edvard Thörnros
 
