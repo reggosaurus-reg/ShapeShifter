@@ -57,8 +57,6 @@ function draw_enemies()
 	end
 end
 
-enemies_spawned = 0  --TODO MOVE!
-
 function update_other_objects(dt)
 	for i, shot in pairs(shots) do
 		shot:move(dt)
@@ -75,3 +73,4 @@ function update_other_objects(dt)
 		enemy:update()
 	end
 end
+
