@@ -5,25 +5,12 @@ require("functions")
 require("values")
 
 function love.load()
-	alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
-	hs_holder = ""
-
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
 
-	big_font = love.graphics.newFont("yf16font.ttf", 55)
-	medium_font = love.graphics.newFont("yf16font.ttf", 15)
-	medium_font:setFilter( "nearest", "nearest" )
-	big_font:setFilter( "nearest", "nearest" )
+	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
+	mode = "mode"..key_see
 
 	state = "start" -- or "game_running" or "take_name" or "dead"
-	highscore = 0
-	max_damage = 4
-	
-	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
-	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
-	rotation_speed = math.pi * 2  -- half a lap per second
-
-	mode = "mode"..key_see -- initial mode
 
 	music_bergakung:play()
 	music_bergakung:setLooping(true)
@@ -33,11 +20,11 @@ function love.keypressed(key)
 	if state == "game_running" then
 		if key == "escape" then
 			state = "start"
+			reset_state_values()
+			mode = "mode"..key_see
 			music_penta:stop()
 			music_western:stop()
 			music_bergakung:play()
-		end
-		if key == "9" then
 		end
 		-- Modes
 		if key == key_see or key == key_move or key == key_attack then
@@ -111,13 +98,11 @@ function love.keyreleased(key)
 	end
 end
 
-music_started = false
-
 function love.update(dt)
 	if state == "game_running" then
 		game_time = game_time + dt
-		if game_time > 6 and not music_started then
-			music_started = true
+		if game_time > 6 and not game_music_started then
+			game_music_started = true
  			music_penta:play()
  			music_penta:setLooping(true)
  		end
@@ -171,6 +156,7 @@ function start_game()
 end
 
 function lose_game()
+	mode = "mode"..key_see
 	music_penta:stop()
 	highscore = math.max(highscore, game_time) 
 	if highscore == game_time then
