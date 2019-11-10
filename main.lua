@@ -107,10 +107,13 @@ function love.update(dt)
 			end
 		end
 
-		-- check if any shot has hit an enemy
+		-- check if any shot has hit an enemy, regenerate HP!
 		for i, shot in pairs(shots) do
 			for j, enemy in pairs(enemies) do
 				if collision.collisionTest(shot.shape, enemy.shape) then
+					if curr_damage > 1 then
+						curr_damage = curr_damage - 1
+					end
 					sound_enemy_hit:play()
 					table.remove(shots, i)
 					table.remove(enemies, j)
