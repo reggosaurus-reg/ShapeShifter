@@ -1,4 +1,5 @@
 c = require("collision")
+require("values")
 
 function get_value(table, arg, default)
 	if table[arg] ~= nil then return table[arg] else return default end
@@ -78,8 +79,8 @@ function init_objects()
 	curr_damage = 1
 
 	enemies = {}
-	enemy_interval = 2 -- Seconds between enemy spawning
-	start_time = love.timer.getTime() -- Can use getMicroTime for microsessions
+	enemy_interval = 2
+	start_time = love.timer.getTime()
 	min_speed = 100
 	max_speed = 200
 
@@ -129,6 +130,7 @@ function spawn_enemy()
 
 	enemies[#enemies + 1] = spawn("enemy", args)
 
+	sound_enemy_spawn:play()
 end
 
 -- Draw functions

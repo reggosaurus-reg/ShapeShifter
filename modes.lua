@@ -57,13 +57,17 @@ function draw_enemies()
 	end
 end
 
+enemies_spawned = 0  --TODO MOVE!
+
 function update_other_objects(dt)
 	for i, shot in pairs(shots) do
 		shot:move(dt)
 		shot:update()
 	end
-	if love.timer.getTime() - start_time > enemy_interval then
-		start_time = love.timer.getTime()
+	if enemies_spawned < math.floor(game_time / enemy_interval) then
+		-- e.g. game_time = 6.01 => game_time / enemy_interval = 3.005
+		-- so if enemies_spawned == 2 then spawn 
+		enemies_spawned = enemies_spawned + 1
 		spawn_enemy()
 	end
 	for i, enemy in pairs(enemies) do

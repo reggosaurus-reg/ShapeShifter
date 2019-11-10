@@ -11,6 +11,7 @@ function write_right(text, font, win_w, margin)
 end
 
 function time_to_string(time)
+	time = math.ceil((time * 100)) / 100
 	local time = ""..time
 	if #time == 1 then
 		return time..".00"

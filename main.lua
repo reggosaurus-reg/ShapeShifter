@@ -2,23 +2,12 @@ collision = require("collision")
 require("modes")
 require("objects")
 require("functions")
-
--- KEYMAP
-rot_l = "j"
-rot_r = "k"
-inc_x = "d"
-dec_x = "a"
-inc_y = "w"
-dec_y = "s"
-key_see = "1"
-key_move = "2"
-key_attack = "3"
+require("values")
 
 function love.load()
-	win_w = 800	
-	win_h = 600
 	alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 	hs_holder = ""
+
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
 
 	big_font = love.graphics.newFont("yf16font.ttf", 55)
@@ -36,6 +25,8 @@ function love.load()
 
 	mode = "mode"..key_see -- initial mode
 
+	music_bergakung:play()
+	music_bergakung:setLooping(true)
 end
 
 function love.keypressed(key)
@@ -67,12 +58,14 @@ function love.keypressed(key)
 
 		if key == "space" then
 			modes[mode].func_shoot()
+			sound_shoot:play()
 		end
 
 	elseif state == "start" then
 		if key == "escape" then
 			love.event.quit()
 		elseif key == "space" or key == "return" then
+			music_bergakung:stop()
 			start_game()
 		end
 
@@ -115,13 +108,23 @@ function love.keyreleased(key)
 	end
 end
 
+music_started = false
+
 function love.update(dt)
 	if state == "game_running" then
+		game_time = game_time + dt
+		if game_time > 6 and not music_started then
+			music_started = true
+ 			music_penta:play()
+ 			music_penta:setLooping(true)
+ 		end
+
 		modes[mode].func_update(dt)
 
 		-- check if an enemy has hit the player
 		for i, enemy in pairs(enemies) do
 			if collision.collisionTest(player.shape, enemy.shape) then
+				sound_player_hit:play()
 				curr_damage = curr_damage + 1
 				table.remove(enemies, i)
 			end
@@ -131,6 +134,7 @@ function love.update(dt)
 		for i, shot in pairs(shots) do
 			for j, enemy in pairs(enemies) do
 				if collision.collisionTest(shot.shape, enemy.shape) then
+					sound_enemy_hit:play()
 					table.remove(shots, i)
 					table.remove(enemies, j)
 				end
@@ -147,7 +151,6 @@ end
 function love.draw()
 	if state == "game_running" then
 		modes[mode].func_draw()
-		game_time = math.ceil((love.timer.getTime() - game_start_time)*100) / 100
 		write_right(time_to_string(game_time), medium_font, win_w, 5)
 	elseif state == "start" then
 		show_startscreen()
@@ -159,10 +162,13 @@ end
 function start_game()
 	state = "game_running"
 	init_objects()
-	game_start_time = love.timer.getTime()
+	game_time = 0
+
+	music_western:play()
 end
 
 function lose_game()
+	music_penta:stop()
 	highscore = math.max(highscore, game_time) 
 	if highscore == game_time then
 		state = "take_name"
