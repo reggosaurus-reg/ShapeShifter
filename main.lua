@@ -48,7 +48,6 @@ function love.keypressed(key)
 
 		if key == "space" then
 			modes[mode].func_shoot()
-			sound_shoot:play()
 		end
 
 	elseif state == "start" then
