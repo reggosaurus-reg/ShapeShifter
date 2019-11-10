@@ -1,15 +1,15 @@
 require("slam")
 
 -- KEYMAP
-rot_l = "j"
-rot_r = "k"
-inc_x = "d"
-dec_x = "a"
-inc_y = "w"
-dec_y = "s"
+key_right = "right"
+key_left = "left"
+key_up = "up"
+key_down = "down"
 key_see = "1"
 key_move = "2"
 key_attack = "3"
+-- "none", "rot", "move"
+pressed_keys = {left = "none", right = "none", up = "none", down = "none"}
 
 win_w = 800	
 win_h = 600
