@@ -66,7 +66,8 @@ end
 -- Creation functions 
 
 function init_objects()
-	player = spawn("player", {x = 60})
+	player = spawn("player", {x = 60, height = 80})
+	curr_damage = 1
 
 	enemies = {}
 	enemy_interval = 2 -- Seconds between enemy spawning
@@ -128,11 +129,10 @@ function draw_rectangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), 
-				object.width, object.height,
-				(object.width / 2) * object.round,
-				(object.height / 2) * object.round
-		)
+		function sub_rectangle(x, y, w, h)
+			love.graphics.rectangle(object.filling, x, y, w, h)
+		end
+		draw_subs(object, sub_rectangle)
 	love.graphics.pop()
 end
 
@@ -140,11 +140,11 @@ function draw_ellipse(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), 
-				object.width, object.height,
-				(object.width / 2),
-				(object.height / 2)
-		)
+		function sub_ellipse(x, y, w, h)
+			love.graphics.rectangle(object.filling, x, y, w, h, 
+									object.width / 2, object.height / 2)
+		end
+		draw_subs(object, sub_ellipse)
 	love.graphics.pop()
 end
 
@@ -152,11 +152,28 @@ function draw_triangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		vertices = {0, - object.height / 2,  
-					object.width / 2,  object.height / 2,
-					- object.width / 2,  object.height / 2}
-		love.graphics.polygon(object.filling, vertices)
+		local w0 = object.width / 2
+		local h0 = object.height / 2
+		for hurt = curr_damage, max_damage do
+			local s = 1 - hurt / max_damage
+			local diff = 1.1
+			vertices = {0, - h0 + diff*s*h0,
+						w0 - diff*s*w0, h0 - s*h0,
+						- w0 + diff*s*w0, h0 - s*h0}
+			love.graphics.polygon(object.filling, vertices)
+		end
 	love.graphics.pop()
+end
+
+function draw_subs(object, func)
+	local x0 = - (object.width / 2)
+	local y0 = - (object.height / 2)
+	local w0 = object.width
+	local h0 = object.height
+	for hurt = curr_damage, max_damage do
+		local p = hurt / max_damage
+		func(x0 + w0/2 * (1-p), y0 + h0/2 * (1-p), w0 * p, h0 * p)
+	end
 end
 
 -- Update functions
