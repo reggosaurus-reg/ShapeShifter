@@ -41,7 +41,6 @@ mode_attack = {
 	func_draw = function() 
 		draw_triangle(player) 
 		draw_shot()
-		draw_enemies()
 	end,
 	func_key_pressed = rotate_on_key,
 	func_key_released = stop_rotate_on_key,

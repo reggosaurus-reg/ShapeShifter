@@ -10,7 +10,7 @@ function love.load()
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
 	mode = "mode"..key_see
 
-	state = "start" -- or "game_running" or "take_name" or "dead"
+	state = "start" -- or "game_running" or "take_name" or "dead" or "info"
 
 	music_bergakung:play()
 	music_bergakung:setLooping(true)
@@ -20,7 +20,6 @@ function love.keypressed(key)
 	if state == "game_running" then
 		if key == "escape" then
 			state = "start"
-			reset_state_values()
 			mode = "mode"..key_see
 			music_penta:stop()
 			music_western:stop()
@@ -42,9 +41,17 @@ function love.keypressed(key)
 		if key == "escape" then
 			love.event.quit()
 		elseif key == "space" or key == "return" then
+			state = "info"
+		end
+
+	elseif state == "info" then 
+		if key == "escape" then
+			state = "start"
+		elseif key == "space" or key == "return" then
 			music_bergakung:stop()
 			start_game()
 		end
+
 
 	elseif state == "death" then
 		if key == "space" or key == "return"or key == "escape" then
@@ -121,9 +128,11 @@ end
 function love.draw()
 	if state == "game_running" then
 		modes[mode].func_draw()
-		write_right(time_to_string(game_time), medium_font, win_w, 5)
+		write_right(time_to_string(game_time), small_font, win_w, 5)
 	elseif state == "start" then
 		show_startscreen()
+	elseif state == "info" then
+		show_infoscreen()
 	else
 		show_deathscreen()
 	end
@@ -134,6 +143,7 @@ function start_game()
 	init_objects()
 	game_time = 0
 
+	reset_state_values()
 	music_western:play()
 end
 
@@ -152,12 +162,12 @@ function show_deathscreen()
 	if state == "take_name" then
 		write_centered("You died...", big_font, 0.7*win_h / 4, win_w) 
 		write_centered("... but you beat the highscore! Please enter your name:",
-						medium_font, 2*win_h / 4, win_w)
-		write_centered(hs_holder, medium_font, 2.5*win_h / 4, win_w)
+						small_font, 2*win_h / 4, win_w)
+		write_centered(hs_holder, small_font, 2.5*win_h / 4, win_w)
 	elseif state == "death" then
 		write_centered("You died...", big_font, 0.7*win_h / 4, win_w) 
 		write_centered("Press <space> to go to the main menu.",
-						medium_font, 2*win_h / 4, win_w)
+						small_font, 2*win_h / 4, win_w)
 	end
 end
 
@@ -175,12 +185,45 @@ function show_startscreen()
 	-- Print 
 	write_centered("Shape Shifter", big_font, 0.7*win_h / 4, win_w)
 	write_centered("Current highscore is "..time_to_string(highscore).." seconds, held by "..holder,
-					medium_font, y + 2*h, win_w)
-	write_centered("Press <space> to start game!", medium_font, 3.2*win_h / 4, win_w)
+					small_font, y + 2*h, win_w)
+	write_centered("Press <space> to start game!", small_font, 3.2*win_h / 4, win_w)
 	
 	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
 	love.graphics.rectangle("line", x, y, w, h, 0) 
 	love.graphics.polygon("line", {x + dist, y, 
 									x + dist, y + h, 
 									x + w + dist, y + h/2}) 
+end
+
+function show_infoscreen()
+	local w = 60
+	local h = 40
+	local x = (win_w - w) / 2
+	local y = 1.7*win_h / 4
+	local dist = 90	
+
+	write_centered("Shift between modes:", medium_font, 0.3*win_h / 4, win_w)
+	write_centered("Press", small_font, y - 2.1*w, win_w)
+
+	write("1", small_font, x - 1.1*w, 	y - 1.4*w)
+	write_centered("2", small_font,		y - 1.4*w, win_w)
+	write("3", small_font, x + 1.8*w, 	y - 1.4*w)
+
+	write_centered("to", small_font, y - dist + 0.7*w, win_w)
+
+	write("see", small_font, x - 1.3*w, 	y + 0.9*w)
+	write_centered("move", small_font,	 	y + 0.9*w, win_w)
+	write("shoot", small_font, x + 1.5*w, 	y + 0.9*w)
+
+	--write_centered("with", small_font, y + 1.6*w, win_w)
+
+	write_centered("< >  to rotate in see and shoot mode", small_font, 	y + 2.2*w, win_w)
+	write_centered("< ^ ˇ >   to move in move mode", small_font, 	y + 2.8*w, win_w) 
+
+	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
+	love.graphics.rectangle("line", x, y, w, h, 0) 
+	love.graphics.polygon("line", {x + dist, y, 
+									x + dist, y + h, 
+									x + w + dist, y + h/2}) 
+	write_centered("Press <space> to start game (and shoot)!", small_font, 3.2*win_h / 4, win_w)
 end

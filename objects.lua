@@ -75,7 +75,7 @@ end
 -- Creation functions 
 
 function init_objects()
-	player = spawn("player", {})
+	player = spawn("player", {height = 70})
 	curr_damage = 1
 
 	enemies = {}

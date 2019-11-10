@@ -12,6 +12,12 @@ function write_right(text, font, win_w, margin)
 	love.graphics.print(text, win_w - w - 2*margin, margin)
 end
 
+function write(text, font, x, y)
+	local w = font:getWidth(text)
+	love.graphics.setFont(font)
+	love.graphics.print(text, x, y)
+end
+
 function time_to_string(time)
 	time = math.ceil((time * 100)) / 100
 	local time = ""..time

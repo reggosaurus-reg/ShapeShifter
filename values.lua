@@ -4,7 +4,9 @@ require("slam")
 alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 big_font = love.graphics.newFont("yf16font.ttf", 55)
-medium_font = love.graphics.newFont("yf16font.ttf", 15)
+medium_font = love.graphics.newFont("yf16font.ttf", 35)
+small_font = love.graphics.newFont("yf16font.ttf", 15)
+small_font:setFilter( "nearest", "nearest" )
 medium_font:setFilter( "nearest", "nearest" )
 big_font:setFilter( "nearest", "nearest" )
 
