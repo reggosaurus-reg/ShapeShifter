@@ -44,10 +44,6 @@ function love.keypressed(key)
 			state = "start"
 		end
 		if key == "9" then
-			curr_damage = curr_damage + 1
-			if curr_damage > max_damage then
-				lose_game()
-			end
 		end
 		-- Modes
 		if key == key_see or key == key_move or key == key_attack then
@@ -126,7 +122,8 @@ function love.update(dt)
 		-- check if an enemy has hit the player
 		for i, enemy in pairs(enemies) do
 			if collision.collisionTest(player.shape, enemy.shape) then
-				love.event.quit(1)  -- TODO
+				curr_damage = curr_damage + 1
+				table.remove(enemies, i)
 			end
 		end
 
@@ -134,10 +131,14 @@ function love.update(dt)
 		for i, shot in pairs(shots) do
 			for j, enemy in pairs(enemies) do
 				if collision.collisionTest(shot.shape, enemy.shape) then
-					-- kill enemy
-					love.event.quit(2)  -- TODO
+					table.remove(shots, i)
+					table.remove(enemies, j)
 				end
 			end
+		end
+
+		if curr_damage > max_damage then
+			lose_game()
 		end
 	end
 

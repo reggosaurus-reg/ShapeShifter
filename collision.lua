@@ -2,18 +2,23 @@
 local collision = {}
 
 function collision.makeRect(x, y, w, h)
-	local rect = {collision_type = "rectangle", x = x, y = y, width = w, height = h}
+	local rect = {collision_type = "rectangle", x = x - w / 2, y = y - h / 2, width = w, height = h}
 	return rect
 end
 
 function collision.makeCircle(x, y, r)
-	local circle = {collision_type = "circle", x = x, y = y, radius = r}
+	local circle = {collision_type = "circle", x = x - r, y = y - r, radius = r}
 	return circle
 end
 
 function collision.moveTo(shape, x, y)
-	shape.x = x
-	shape.y = y
+	if shape.collision_type == "rectangle" then
+		shape.x = x - shape.width / 2
+		shape.y = y - shape.height / 2
+	elseif shape.collision_type == "circle" then
+		shape.x = x - shape.radius
+		shape.y = y - shape.radius
+	end
 end
 
 function collision.collisionTest(a, b)
