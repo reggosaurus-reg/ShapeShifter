@@ -24,13 +24,13 @@ function spawn(object_type, args)
 		player.draw = get_value(args, "draw", draw_rectangle)
 		return player
 	elseif object_type == "enemy" then
-		enemy = {}
+		local enemy = {}
 		enemy.x = get_value(args, "x", 0) 
 		enemy.y = get_value(args, "y", 0)
 		enemy.x_speed = get_value(args, "x_speed", 100)
 		enemy.y_speed = get_value(args, "y_speed", 100)
-		enemy.x_dir = 1
-		enemy.y_dir = 1
+		enemy.x_dir = get_value(args, "x_dir", 1)
+		enemy.y_dir = get_value(args, "y_dir", 1)
 		enemy.height = get_value(args, "height", 80) 
 		enemy.width = get_value(args, "width", 80)
 		enemy.rotation = get_value(args, "rotation", 0)
@@ -40,6 +40,7 @@ function spawn(object_type, args)
 		enemy.draw = get_value(args, "draw", draw_rectangle)
 		enemy.move = get_value(args, "move", move)
 		enemy.update = get_value(args, "update", update)
+		return enemy
 	elseif object_type == "shot" then
 		local shot = {}
 		shot.x = get_value(args, "x", 200)
@@ -62,6 +63,65 @@ function spawn(object_type, args)
 	-- if args.x != nil then x = args.x else x = 25 end
 end
 
+-- Creation functions 
+
+function init_objects()
+	player = spawn("player", {x = 60, height = 80})
+	curr_damage = 1
+
+	enemies = {}
+	enemy_interval = 2 -- Seconds between enemy spawning
+	start_time = love.timer.getTime() -- Can use getMicroTime for microsessions
+	min_speed = 100
+	max_speed = 200
+
+	shots = {}
+end
+
+function spawn_shot()
+	local args = {}
+	args.x = player.x
+	args.y = player.y
+	args.rotation = player.rotation - math.pi / 2
+	shots[#shots + 1] = spawn("shot", args)
+end
+
+function spawn_enemy()
+	local args = {}
+
+	-- to only spawn on borders
+	math.randomseed(os.time())
+	wall_or_roof = random_of_two(0, 1) 
+	left_or_right = random_of_two(0, 1)
+	--- wall
+	if wall_or_roof == 0 then
+		args.x = random_of_two(0, win_w)
+		args.y = math.random(win_h)
+	--- roof
+	else 
+		args.x = math.random(win_w)
+		args.y = random_of_two(0, win_h)
+	end
+
+	-- to move towards the other end of the screen
+	if args.x < win_w / 2 then
+		args.x_dir = 1
+	else
+		args.x_dir = -1
+	end
+
+	if args.y < win_h / 2 then
+		args.y_dir = 1
+	else
+		args.y_dir = -1
+	end
+	
+	args.x_speed = math.random(min_speed, max_speed) -- TODO: Change max/ min when "levelup"
+	args.y_speed = math.random(min_speed, max_speed)
+
+	enemies[#enemies + 1] = spawn("enemy", args)
+
+end
 
 -- Draw functions
 
@@ -69,11 +129,10 @@ function draw_rectangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), 
-				object.width, object.height,
-				(object.width / 2) * object.round,
-				(object.height / 2) * object.round
-		)
+		function sub_rectangle(x, y, w, h)
+			love.graphics.rectangle(object.filling, x, y, w, h)
+		end
+		draw_subs(object, sub_rectangle)
 	love.graphics.pop()
 end
 
@@ -81,11 +140,11 @@ function draw_ellipse(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), 
-				object.width, object.height,
-				(object.width / 2),
-				(object.height / 2)
-		)
+		function sub_ellipse(x, y, w, h)
+			love.graphics.rectangle(object.filling, x, y, w, h, 
+									object.width / 2, object.height / 2)
+		end
+		draw_subs(object, sub_ellipse)
 	love.graphics.pop()
 end
 
@@ -93,11 +152,28 @@ function draw_triangle(object)
 	love.graphics.push()
 		love.graphics.translate(object.x, object.y)
 		love.graphics.rotate(object.rotation)
-		vertices = {0, - object.height / 2,  
-					object.width / 2,  object.height / 2,
-					- object.width / 2,  object.height / 2}
-		love.graphics.polygon(object.filling, vertices)
+		local w0 = object.width / 2
+		local h0 = object.height / 2
+		for hurt = curr_damage, max_damage do
+			local s = 1 - hurt / max_damage
+			local diff = 1.1
+			vertices = {0, - h0 + diff*s*h0,
+						w0 - diff*s*w0, h0 - s*h0,
+						- w0 + diff*s*w0, h0 - s*h0}
+			love.graphics.polygon(object.filling, vertices)
+		end
 	love.graphics.pop()
+end
+
+function draw_subs(object, func)
+	local x0 = - (object.width / 2)
+	local y0 = - (object.height / 2)
+	local w0 = object.width
+	local h0 = object.height
+	for hurt = curr_damage, max_damage do
+		local p = hurt / max_damage
+		func(x0 + w0/2 * (1-p), y0 + h0/2 * (1-p), w0 * p, h0 * p)
+	end
 end
 
 -- Update functions
@@ -114,4 +190,12 @@ end
 
 function update(object)
 
+end
+
+function random_of_two(a, b)
+	if math.random(0, 1) == 0 then
+		return a
+	else 
+		return b
+	end
 end
