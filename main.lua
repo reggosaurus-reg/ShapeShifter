@@ -1,3 +1,4 @@
+collision = require("collision")
 require("modes")
 require("objects")
 
@@ -17,7 +18,6 @@ key_attack = "3"
 
 function love.load()
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
-	collider = HC(100, on_collide)
 	
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
@@ -88,21 +88,7 @@ function get_type_from_shape(shape, objects)
 	return nil
 end
 
-function on_collide(dt, shape_a, shape_b)
-	print("colliding!")
-	if get_type_from_shape(shape_a) == "enemy" or get_type_from_shape(shape_b) == "enemy" then
-		if get_type_from_shape(shape_a) == "player" or get_type_from_shape(shape_b) == "player" then
-			print("colliding player")
-		elseif get_type_from_shape(shape_a) == "shot" or get_type_from_shape(shape_b) == "shot" then
-				print("colliding shot")
-		end
-	end
-end
-
 function love.update(dt)
-	print(collider)
-	collider:update(dt)
-	
 	-- TODO: Move those calls into modes
 	modes[mode].func_update(dt)
 	for i, enemy in pairs(enemies) do
@@ -113,6 +99,22 @@ function love.update(dt)
 	for i, shot in pairs(shots) do
 		shot:move(dt)
 		shot:update()
+	end
+
+	-- check if an enemy has hit the player
+	for i, enemy in pairs(enemies) do
+		if collision.collisionTest(player.shape, enemy.shape) then
+			love.event.quit(1) --TODO
+		end
+	end
+
+	-- check if any shot has hit an enemy
+	for i, shot in pairs(shots) do
+		for j, enemy in pairs(enemies) do
+			if collision.collisionTest(shot.shape, enemy.shape) then
+				-- kill enemy
+			end
+		end
 	end
 end
 

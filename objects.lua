@@ -1,3 +1,5 @@
+c = require("collision")
+
 function get_value(table, arg, default)
 	if table[arg] ~= nil then return table[arg] else return default end
 end
@@ -19,6 +21,7 @@ function spawn(object_type, args)
 		player.rotation_dir = 0
 		player.round = 0
 		player.filling = "line"
+		player.shape = c.makeRect(player.x, player.y, player.width, player.height)
 		player.move = get_value(args, "move", move)
 		player.rotate = get_value(args, "rotate", rotate)
 		player.update = get_value(args, "update", update)
@@ -39,7 +42,7 @@ function spawn(object_type, args)
 		enemy.rotation_dir = 0
 		enemy.round = 0 
 		enemy.filling = "fill"
-		enemy.shape = collider:addCircle(enemy.x, enemy.y, 40)
+		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
 		enemy.draw = get_value(args, "draw", draw_rectangle)
 		enemy.move = get_value(args, "move", move)
 		enemy.update = get_value(args, "update", update)
@@ -54,11 +57,12 @@ function spawn(object_type, args)
 		shot.speed = get_value(args, "speed", 400)
 		shot.x_speed = shot.speed * math.cos(shot.rotation)
 		shot.y_speed = shot.speed * math.sin(shot.rotation)
-		shot.width = get_value(args, "width", 16)
-		shot.height = get_value(args, "height", 16)
+		shot.radius = get_value(args, "radius", 8)
+		shot.width = shot.radius * 2
+		shot.height = shot.radius * 2
 		shot.round = 1
 		shot.filling = "fill"
-		shot.shape = collider:addCircle(shot.x, shot.y, 8)
+		shot.shape = c.makeCircle(shot.x, shot.y, shot.radius)
 		shot.move = get_value(args, "move", move)
 		shot.update = get_value(args, "update", update)
 		shot.draw = get_value(args, "draw", draw_rectangle)
@@ -114,6 +118,8 @@ function move(object, dt)
 	-- if object.canMove()
 	object.x = object.x + object.x_dir * object.x_speed * dt
 	object.y = object.y + object.y_dir * object.y_speed * dt
+
+	c.moveTo(object.shape, object.x, object.y)
 end
 
 function update(object)
