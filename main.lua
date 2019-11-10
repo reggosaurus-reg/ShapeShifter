@@ -25,6 +25,7 @@ function love.load()
 	game_running = false
 	hs_holder = "A. Nonymous"
 	highscore = 0
+	max_damage = 4
 	
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
@@ -35,11 +36,17 @@ function love.load()
 end
 
 function love.keypressed(key)
+	-- TODO: Switch
 	if game_running then
 		if key == "escape" then
 			close_game()
 		end
-			-- TODO: call this then player dies... love.keypressed("escape")
+		if key == "9" then
+			curr_damage = curr_damage + 1
+			if curr_damage > max_damage then
+				lose_game()
+			end
+		end
 		-- Modes
 		if key == key_see or key == key_move or key == key_attack then
 			mode = "mode"..key
@@ -68,7 +75,7 @@ function love.keypressed(key)
 		if key == "escape" then
 			love.event.quit()
 		elseif key == "space" or key == "return" then
-			init_game()
+			start_game()
 		end
 	end
 end
@@ -120,7 +127,7 @@ function time_to_string(time)
 	end
 end
 
-function init_game()
+function start_game()
 	game_running = true
 	init_objects()
 	game_start_time = love.timer.getTime()
@@ -129,6 +136,11 @@ end
 function close_game()
 	game_running = false
 	highscore = math.max(highscore, game_time) 
+end
+
+function lose_game()
+	close_game()
+	-- Mark death
 end
 
 function show_startscreen()
@@ -153,7 +165,7 @@ function show_startscreen()
 	love.graphics.print(hs_text, (win_w - w_hs) / 2, y + 2*h)
 	
 	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
-	love.graphics.rectangle("line", x, y, w, h, 0, 0) 
+	love.graphics.rectangle("line", x, y, w, h, 0) 
 	love.graphics.polygon("line", {x + dist, y, 
 									x + dist, y + h, 
 									x + w + dist, y + h/2}) 
