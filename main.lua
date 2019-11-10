@@ -188,7 +188,7 @@ function show_startscreen()
 
 	-- Print 
 	write_centered("Shape Shifter", big_font, 0.7*win_h / 4, win_w)
-	write_centered("Current highscore is "..highscore.." seconds, held by "..hs_holder, 
+	write_centered("Current highscore is "..time_to_string(highscore).." seconds, held by "..hs_holder, 
 					medium_font, y + 2*h, win_w)
 	write_centered("Press <space> to start game!", medium_font, 3.2*win_h / 4, win_w)
 	
