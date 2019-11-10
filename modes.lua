@@ -29,6 +29,8 @@ mode_move = {
 	end
 }
 
+last_shot = 0
+
 mode_attack = {
 	func_draw = function() 
 		draw_triangle(player) 
@@ -41,7 +43,11 @@ mode_attack = {
 		update_other_objects(dt)
 	end,
 	func_shoot = function()
-		spawn_shot()
+		if game_time - last_shot > shot_interval then
+			last_shot = game_time
+			spawn_shot()
+			sound_shoot:play()
+		end
 	end
 }
 
@@ -62,7 +68,7 @@ function update_other_objects(dt)
 		shot:move(dt)
 		shot:update()
 	end
-	if enemies_spawned < math.floor(game_time / enemy_interval) then
+	if enemies_spawned < math.floor(game_time / enemy_spawn_interval) then
 		-- e.g. game_time = 6.01 => game_time / enemy_interval = 3.005
 		-- so if enemies_spawned == 2 then spawn 
 		enemies_spawned = enemies_spawned + 1

@@ -79,7 +79,6 @@ function init_objects()
 	curr_damage = 1
 
 	enemies = {}
-	enemy_interval = 2
 	start_time = love.timer.getTime()
 	min_speed = 100
 	max_speed = 200

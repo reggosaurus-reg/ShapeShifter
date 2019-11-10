@@ -27,11 +27,15 @@ hs_holder = "A. Nonymous"
 highscore = 0
 max_damage = 4
 
+enemy_spawn_interval = 2
 enemies_spawned = 0
+
+shot_interval = 1
 
 function reset_state_values()
 	-- reset all state-values (that change every game)
 	enemies_spawned = 0
+	last_shot = 0
 end
 
 function reset_all_values()
