@@ -74,10 +74,13 @@ function love.keypressed(key)
 		end
 		if string.find(alphabet, key) then
 			if #hs_holder < 20 then
-				hs_holder = hs_holder..key
+				if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+					hs_holder = hs_holder..string.upper(key)
+				else
+					hs_holder = hs_holder..key
+				end
 			end
 		end
-	
 	end
 end
 
