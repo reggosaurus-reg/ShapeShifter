@@ -32,19 +32,7 @@ function love.keypressed(key)
 		end
 
 		-- Movement
-		if key == rot_r then
-			player.rotation_dir = player.rotation_dir + 1
-		elseif key == rot_l then
-			player.rotation_dir = player.rotation_dir - 1
-		elseif key == inc_x then
-			player.x_dir = player.x_dir + 1
-		elseif key == dec_x then
-			player.x_dir = player.x_dir - 1
-		elseif key == dec_y then
-			player.y_dir = player.y_dir + 1
-		elseif key == inc_y then
-			player.y_dir = player.y_dir - 1
-		end
+		modes[mode].func_key_pressed(key)
 
 		if key == "space" then
 			modes[mode].func_shoot()
@@ -64,7 +52,7 @@ function love.keypressed(key)
 		end
 
 	elseif state == "take_name" then
-		if key == "return" then
+		if key == "return" or key == "escape" then
 			state = "start"
 		end
 		if key == "backspace" and #hs_holder > 0 then
@@ -81,26 +69,14 @@ function love.keypressed(key)
 				end
 			end
 		elseif key == "space" then
-			hs_holder.." "
+			hs_holder = hs_holder.." "
 		end
 	end
 end
 
 function love.keyreleased(key)
 	if state == "game_running" then
-		if key == rot_r then
-			player.rotation_dir = player.rotation_dir - 1
-		elseif key == rot_l then
-			player.rotation_dir = player.rotation_dir + 1
-		elseif key == inc_x then
-			player.x_dir = player.x_dir - 1
-		elseif key == dec_x then
-			player.x_dir = player.x_dir + 1
-		elseif key == dec_y then
-			player.y_dir = player.y_dir - 1
-		elseif key == inc_y then
-			player.y_dir = player.y_dir + 1
-		end
+		modes[mode].func_key_released(key)
 	end
 end
 
@@ -193,9 +169,12 @@ function show_startscreen()
 	local y = 1.7*win_h / 4
 	local dist = 90	
 
+	local holder = hs_holder
+	if #holder < 1 then holder = "A. Nonymous" end
+
 	-- Print 
 	write_centered("Shape Shifter", big_font, 0.7*win_h / 4, win_w)
-	write_centered("Current highscore is "..time_to_string(highscore).." seconds, held by "..hs_holder, 
+	write_centered("Current highscore is "..time_to_string(highscore).." seconds, held by "..holder,
 					medium_font, y + 2*h, win_w)
 	write_centered("Press <space> to start game!", medium_font, 3.2*win_h / 4, win_w)
 	

@@ -8,15 +8,15 @@ medium_font = love.graphics.newFont("yf16font.ttf", 15)
 medium_font:setFilter( "nearest", "nearest" )
 big_font:setFilter( "nearest", "nearest" )
 
-rot_l = "j"
-rot_r = "k"
-inc_x = "d"
-dec_x = "a"
-inc_y = "w"
-dec_y = "s"
+key_right = "right"
+key_left = "left"
+key_up = "up"
+key_down = "down"
 key_see = "1"
 key_move = "2"
 key_attack = "3"
+-- "none", "rot", "move"
+pressed_keys = {left = "none", right = "none", up = "none", down = "none"}
 
 rotation_speed = math.pi * 2  -- half a lap per second
 

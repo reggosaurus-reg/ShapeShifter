@@ -1,4 +1,5 @@
 require("objects")
+require("functions")
 
 mode_see = {
 	func_draw = function() 
@@ -6,7 +7,10 @@ mode_see = {
 		draw_shot()
 		draw_enemies()
 	end,
+	func_key_pressed = rotate_on_key,
+	func_key_released = stop_rotate_on_key,
 	func_update = function(dt) 
+		reset_movements()
 		rotate(player, dt)
 		update(player)
 		update_other_objects(dt)
@@ -19,9 +23,11 @@ mode_move = {
 	func_draw = function() 
 		draw_rectangle(player) 
 	end,
+	func_key_pressed = move_on_key,
+	func_key_released = stop_move_on_key,
 	func_update = function(dt) 
+		reset_rotations()
 		move(player,dt) 
-		rotate(player, dt)
 		update(player)
 		update_other_objects(dt)
 	end,
@@ -37,7 +43,10 @@ mode_attack = {
 		draw_shot()
 		draw_enemies()
 	end,
+	func_key_pressed = rotate_on_key,
+	func_key_released = stop_rotate_on_key,
 	func_update = function(dt) 
+		reset_movements()
 		rotate(player, dt)
 		update(player)
 		update_other_objects(dt)
