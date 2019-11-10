@@ -17,6 +17,8 @@ key_attack = "3"
 function love.load()
 	win_w = 800	
 	win_h = 600
+	alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
+	hs_holder = ""
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
 
 	big_font = love.graphics.newFont("yf16font.ttf", 55)
@@ -25,7 +27,6 @@ function love.load()
 	big_font:setFilter( "nearest", "nearest" )
 
 	state = "start" -- or "game_running" or "take_name" or "dead"
-	hs_holder = "A. Nonymous"
 	highscore = 0
 	max_damage = 4
 	
@@ -87,6 +88,14 @@ function love.keypressed(key)
 	elseif state == "take_name" then
 		if key == "return" then
 			state = "start"
+		end
+		if key == "backspace" and #hs_holder > 0 then
+				hs_holder = hs_holder:sub(1,#hs_holder - 1)
+		end
+		if string.find(alphabet, key) then
+			if #hs_holder < 20 then
+				hs_holder = hs_holder..key
+			end
 		end
 	
 	end
@@ -166,12 +175,11 @@ function show_deathscreen()
 		write_centered("You died...", big_font, 0.7*win_h / 4, win_w) 
 		write_centered("... but you beat the highscore! Please enter your name:",
 						medium_font, 2*win_h / 4, win_w)
-		write_name = true
+		write_centered(hs_holder, medium_font, 2.5*win_h / 4, win_w)
 	elseif state == "death" then
 		write_centered("You died...", big_font, 0.7*win_h / 4, win_w) 
 		write_centered("Press <space> to go to the main menu.",
 						medium_font, 2*win_h / 4, win_w)
-		write_name = false
 	end
 end
 
@@ -185,7 +193,7 @@ function show_startscreen()
 
 	-- Print 
 	write_centered("Shape Shifter", big_font, 0.7*win_h / 4, win_w)
-	write_centered("Current highscore is "..highscore.." seconds by "..hs_holder, 
+	write_centered("Current highscore is "..highscore.." seconds, held by "..hs_holder, 
 					medium_font, y + 2*h, win_w)
 	write_centered("Press <space> to start game!", medium_font, 3.2*win_h / 4, win_w)
 	
