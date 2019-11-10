@@ -95,7 +95,8 @@ music_started = false
 
 function love.update(dt)
 	if game_running then
-		if love.timer.getTime() - game_start_time > 6 and not music_started then
+		game_time = game_time + dt
+		if game_time > 6 and not music_started then
 			music_started = true
  			music_penta:play()
  			music_penta:setLooping(true)
@@ -133,7 +134,6 @@ end
 function love.draw()
 	if game_running then
 		modes[mode].func_draw()
-		game_time = math.ceil((love.timer.getTime() - game_start_time)*100) / 100
 		love.graphics.print(time_to_string(game_time), 
 							win_w - medium_font:
 									getWidth(time_to_string(game_time)) - 10, 5)
@@ -143,6 +143,7 @@ function love.draw()
 end
 
 function time_to_string(time)
+	time = math.ceil((time * 100)) / 100
 	local time = ""..time
 	if #time == 1 then
 		return time..".00"
@@ -156,7 +157,7 @@ end
 function start_game()
 	game_running = true
 	init_objects()
-	game_start_time = love.timer.getTime()
+	game_time = 0
 
 	music_western:play()
 end
