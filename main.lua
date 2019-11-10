@@ -1,4 +1,3 @@
-HC = require("hardoncollider")
 require("modes")
 require("objects")
 
