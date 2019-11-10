@@ -1,5 +1,6 @@
-require("objects")
+collision = require("collision")
 require("modes")
+require("objects")
 
 -- KEYMAP
 rot_l = "j"
@@ -98,10 +99,35 @@ function love.keyreleased(key)
 	end
 end
 
+function get_type_from_shape(shape, objects)
+	for i, object in objects do
+		if object.shape == shape then return object.object_type end
+	end
+	return nil
+end
+
 function love.update(dt)
 	if game_running then
 		modes[mode].func_update(dt)
+
+		-- check if an enemy has hit the player
+		for i, enemy in pairs(enemies) do
+			if collision.collisionTest(player.shape, enemy.shape) then
+				love.event.quit(1)  -- TODO
+			end
+		end
+
+		-- check if any shot has hit an enemy
+		for i, shot in pairs(shots) do
+			for j, enemy in pairs(enemies) do
+				if collision.collisionTest(shot.shape, enemy.shape) then
+					-- kill enemy
+					love.event.quit(2)  -- TODO
+				end
+			end
+		end
 	end
+
 end
 
 function love.draw()

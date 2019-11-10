@@ -1,16 +1,20 @@
 -- A file holding the collision code. Checking circles and rects.
 local collision = {}
 
-function collision.makeRect(w, h)
-	local rect = {collision_type = "rectangle", x = 0, y = 0, width = w, height = h}
+function collision.makeRect(x, y, w, h)
+	local rect = {collision_type = "rectangle", x = x, y = y, width = w, height = h}
 	return rect
 end
 
-function collision.makeCircle(r)
-	local circle = {collision_type = "circle", x = 0, y = 0, radius = r}
+function collision.makeCircle(x, y, r)
+	local circle = {collision_type = "circle", x = x, y = y, radius = r}
 	return circle
 end
 
+function collision.moveTo(shape, x, y)
+	shape.x = x
+	shape.y = y
+end
 
 function collision.collisionTest(a, b)
 	if a.collision_type == "rectangle" 
@@ -23,9 +27,9 @@ function collision.collisionTest(a, b)
 						- (a.height + b.height) / 2
 		if diffY > 0 then return false end
 		if diffX < diffY then
-			return { x = math.sign(a.x - b.x), y = 0 }
+			return true
 		else
-			return { x = 0, y = math.sign(a.y - b.y) }
+			return true
 		end
 	end
 	if a.collision_type == "circle" 
@@ -59,6 +63,10 @@ function collision.collisionTest(a, b)
 	local dSq = diffX * diffX + diffY * diffY
 	local rSq = circle.radius * circle.radius
 	return dSq < rSq
+end
+
+function math.clamp(lo, val, hi)
+	return math.min(math.max(lo, val), hi)
 end
 
 return collision
