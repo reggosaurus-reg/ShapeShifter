@@ -67,7 +67,7 @@ function spawn(object_type, args)
 		shot.shape = c.makeCircle(shot.x, shot.y, shot.radius)
 		shot.move = get_value(args, "move", move)
 		shot.update = get_value(args, "update", update)
-		shot.draw = get_value(args, "draw", draw_rectangle)
+		shot.draw = get_value(args, "draw", draw_ellipse)
 		return shot
 	end
 end
