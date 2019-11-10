@@ -1,21 +1,9 @@
 collision = require("collision")
 require("modes")
 require("objects")
-
--- KEYMAP
-rot_l = "j"
-rot_r = "k"
-inc_x = "d"
-dec_x = "a"
-inc_y = "w"
-dec_y = "s"
-key_see = "1"
-key_move = "2"
-key_attack = "3"
+require("values")
 
 function love.load()
-	win_w = 800	
-	win_h = 600
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
 
 	big_font = love.graphics.newFont("yf16font.ttf", 55)
@@ -24,9 +12,6 @@ function love.load()
 	big_font:setFilter( "nearest", "nearest" )
 
 	game_running = false
-	hs_holder = "A. Nonymous"
-	highscore = 0
-	max_damage = 4
 	
 	-- Note: mode1 in table is matched with string created in onKeyPressed/initial mode
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
@@ -34,6 +19,8 @@ function love.load()
 
 	mode = "mode"..key_see -- initial mode
 
+	music_bergakung:play()
+	music_bergakung:setLooping(true)
 end
 
 function love.keypressed(key)
@@ -66,12 +53,14 @@ function love.keypressed(key)
 
 		if key == "space" then
 			modes[mode].func_shoot()
+			sound_shoot:play()
 		end
 
 	else
 		if key == "escape" then
 			love.event.quit()
 		elseif key == "space" or key == "return" then
+			music_bergakung:stop()
 			start_game()
 		end
 	end
@@ -102,13 +91,22 @@ function get_type_from_shape(shape, objects)
 	return nil
 end
 
+music_started = false
+
 function love.update(dt)
 	if game_running then
+		if love.timer.getTime() - game_start_time > 6 and not music_started then
+			music_started = true
+ 			music_penta:play()
+ 			music_penta:setLooping(true)
+ 		end
+
 		modes[mode].func_update(dt)
 
 		-- check if an enemy has hit the player
 		for i, enemy in pairs(enemies) do
 			if collision.collisionTest(player.shape, enemy.shape) then
+				sound_player_hit:play()
 				curr_damage = curr_damage + 1
 				table.remove(enemies, i)
 			end
@@ -118,6 +116,7 @@ function love.update(dt)
 		for i, shot in pairs(shots) do
 			for j, enemy in pairs(enemies) do
 				if collision.collisionTest(shot.shape, enemy.shape) then
+					sound_enemy_hit:play()
 					table.remove(shots, i)
 					table.remove(enemies, j)
 				end
@@ -158,6 +157,8 @@ function start_game()
 	game_running = true
 	init_objects()
 	game_start_time = love.timer.getTime()
+
+	music_western:play()
 end
 
 function close_game()
