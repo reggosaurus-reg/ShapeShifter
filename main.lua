@@ -80,6 +80,8 @@ function love.keypressed(key)
 					hs_holder = hs_holder..key
 				end
 			end
+		elseif key == "space" then
+			hs_holder.." "
 		end
 	end
 end
