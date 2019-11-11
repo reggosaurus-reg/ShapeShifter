@@ -93,9 +93,15 @@ function update_other_objects(dt)
 			enemies[#enemies + 1] = spawn_enemy()
 		end
 	end
+	to_remove = {}
 	for i, enemy in pairs(enemies) do
-		enemy:move(dt)
+		if enemy:move(dt) == false then
+			to_remove[#to_remove + 1] = i
+		end
 		enemy:update()
+	end
+	for i, num in pairs(to_remove) do
+		table.remove(enemies, i)
 	end
 end
 
