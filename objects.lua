@@ -205,6 +205,43 @@ function rotate(object, dt)
 	object.rotation = object.rotation + object.rotation_dir * rotation_speed * dt
 end
 
+function move_player(player, dt)
+	if (player.x + player.x_dir * player.x_speed * dt) + player.width / 2 > win_w then
+		player.x = math.floor(win_w - player.width / 2)
+		return false
+	elseif player.x + player.x_dir * player.x_speed * dt < player.width / 2 then
+		player.x = player.width / 2
+		return false
+	end
+
+	if (player.y + player.y_dir * player.y_speed * dt) + player.height / 2 > win_h then
+		-- TODO player gets "stuck" here
+		player.y = math.floor(win_h - player.width / 2)
+		return false
+	elseif player.y + player.y_dir * player.y_speed * dt < player.height / 2 then
+		player.y = player.height / 2
+		return false
+	end
+	move(player, dt)
+	return true
+end
+
+function move_shot(shot, dt)
+	if shot.x - shot.radius > win_w or shot.x + shot.radius < 0 or 
+			shot.y - shot.radius > win_h or shot.y + shot.radius < 0 then return false end
+	move(shot, dt)
+	return true
+end
+
+function move_enemy(enemy, dt)
+	if enemy.x - enemy.width * 2 > win_w or
+			enemy.y - enemy.height * 2 > win_h or
+			enemy.x + enemy.width * 2 < 0 or
+			enemy.y + enemy.height * 2 < 0 then return false end
+	move(enemy, dt)
+	return true
+end
+
 function move(object, dt)
 	-- if object.canMove()
 	object.x = object.x + object.x_dir * object.x_speed * dt
