@@ -27,7 +27,7 @@ mode_move = {
 	func_key_released = stop_move_on_key,
 	func_update = function(dt) 
 		reset_rotations()
-		move(player, dt)
+		player:move(dt)
 		update(player)
 		update_other_objects(dt)
 	end,
