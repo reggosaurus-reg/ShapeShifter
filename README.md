@@ -15,7 +15,7 @@ Programming: Gustav Sörnäs and Regina Hansson
 
 Music & sounds: Gustav's friend Tore Nylén
 
-Collision from Edvard Thörnros
+Collision from [Edvard Thörnros](https://github.com/FredTheDino/)
 
 ### Versions
 
