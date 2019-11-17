@@ -23,7 +23,7 @@ function spawn(object_type, args)
 		player.round = 0
 		player.filling = "line"
 		player.shape = c.makeRect(player.x, player.y, player.width, player.height)
-		player.move = get_value(args, "move", move)
+		player.move = get_value(args, "move", move_player)
 		player.rotate = get_value(args, "rotate", rotate)
 		player.update = get_value(args, "update", update)
 		player.draw = get_value(args, "draw", draw_rectangle)
@@ -45,7 +45,7 @@ function spawn(object_type, args)
 		enemy.filling = "fill"
 		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
 		enemy.draw = get_value(args, "draw", draw_single_rectangle)
-		enemy.move = get_value(args, "move", move)
+		enemy.move = get_value(args, "move", move_enemy)
 		enemy.update = get_value(args, "update", update)
 		return enemy
 	elseif object_type == "shot" then
@@ -65,7 +65,7 @@ function spawn(object_type, args)
 		shot.round = 1
 		shot.filling = "fill"
 		shot.shape = c.makeCircle(shot.x, shot.y, shot.radius)
-		shot.move = get_value(args, "move", move)
+		shot.move = get_value(args, "move", move_shot)
 		shot.update = get_value(args, "update", update)
 		shot.draw = get_value(args, "draw", draw_ellipse)
 		return shot
@@ -203,6 +203,42 @@ end
 
 function rotate(object, dt)
 	object.rotation = object.rotation + object.rotation_dir * rotation_speed * dt
+end
+
+function move_player(player, dt)
+	if (player.x + player.x_dir * player.x_speed * dt) + player.width / 2 > win_w then
+		player.x = win_w - player.width / 2
+		return false
+	elseif player.x + player.x_dir * player.x_speed * dt < player.width / 2 then
+		player.x = player.width / 2
+		return false
+	end
+
+	if (player.y + player.y_dir * player.y_speed * dt) + player.height / 2 > win_h then
+		-- TODO player gets "stuck" here
+		return false
+	elseif player.y + player.y_dir * player.y_speed * dt < player.height / 2 then
+		player.y = player.height / 2
+		return false
+	end
+	move(player, dt)
+	return true
+end
+
+function move_shot(shot, dt)
+	if shot.x - shot.radius > win_w or shot.x + shot.radius < 0 or 
+			shot.y - shot.radius > win_h or shot.y + shot.radius < 0 then return false end
+	move(shot, dt)
+	return true
+end
+
+function move_enemy(enemy, dt)
+	if enemy.x - enemy.width * 2 > win_w or
+			enemy.y - enemy.height * 2 > win_h or
+			enemy.x + enemy.width * 2 < 0 or
+			enemy.y + enemy.height * 2 < 0 then return false end
+	move(enemy, dt)
+	return true
 end
 
 function move(object, dt)

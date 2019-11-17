@@ -27,7 +27,7 @@ mode_move = {
 	func_key_released = stop_move_on_key,
 	func_update = function(dt) 
 		reset_rotations()
-		move(player, dt)
+		player:move(dt)
 		update(player)
 		update_other_objects(dt)
 	end,
@@ -72,9 +72,15 @@ function draw_enemies()
 end
 
 function update_other_objects(dt)
+	to_remove = {}
 	for i, shot in pairs(shots) do
-		shot:move(dt)
+		if shot:move(dt) == false then
+			to_remove[#to_remove + 1] = i
+		end
 		shot:update()
+	end
+	for i, num in pairs(to_remove) do
+		table.remove(shots, i)
 	end
 	if enemies_spawned < math.floor(game_time / enemy_spawn_interval) then
 		-- e.g. game_time = 6.01 => game_time / enemy_interval = 3.005
@@ -87,9 +93,15 @@ function update_other_objects(dt)
 			enemies[#enemies + 1] = spawn_enemy()
 		end
 	end
+	to_remove = {}
 	for i, enemy in pairs(enemies) do
-		enemy:move(dt)
+		if enemy:move(dt) == false then
+			to_remove[#to_remove + 1] = i
+		end
 		enemy:update()
+	end
+	for i, num in pairs(to_remove) do
+		table.remove(enemies, i)
 	end
 end
 
