@@ -26,10 +26,10 @@ function collision.collisionTest(a, b)
 		and b.collision_type == "rectangle" then
 		-- Rectangle VS Rectangle
 		local diffX = math.abs((a.x + a.width / 2) - (b.x + b.width / 2)) 
-						- (a.width + b.width) / 2
+				- (a.width + b.width) / 2
 		if diffX > 0 then return false end
 		local diffY = math.abs((a.y + a.height / 2) - (b.y + b.height / 2)) 
-						- (a.height + b.height) / 2
+				- (a.height + b.height) / 2
 		if diffY > 0 then return false end
 		if diffX < diffY then
 			return true
@@ -56,11 +56,11 @@ function collision.collisionTest(a, b)
 		circle = a
 	end
 	local nearestX = math.clamp(circle.x, 
-				rect.x, 
-				rect.x + rect.width)
+	rect.x, 
+	rect.x + rect.width)
 	local nearestY = math.clamp(circle.y, 
-				rect.y, 
-				rect.y + rect.height)
+	rect.y, 
+	rect.y + rect.height)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.circle("fill", nearestX, nearestY, 10)
 	local diffX = circle.x - nearestX

@@ -54,12 +54,12 @@ function spawn(object_type, args)
 		enemy.x_dir = get_value(args, "x_dir", 1)
 		enemy.y = get_value(args, "y", 0)
 		enemy.y_dir = get_value(args, "y_dir", 1)
-		
+
 		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
 		enemy.x_speed = get_value(args, "x_speed",
-				math.random(enemy.min_speed, enemy.max_speed))
+		math.random(enemy.min_speed, enemy.max_speed))
 		enemy.y_speed = get_value(args, "y_speed",
-				math.random(enemy.min_speed, enemy.max_speed))
+		math.random(enemy.min_speed, enemy.max_speed))
 		return enemy
 	elseif object_type == "shot" then
 		local shot = {}
@@ -115,7 +115,7 @@ function spawn_enemy()
 	if wall_or_roof == 0 then
 		args.x = random_of_two(0, win_w)
 		args.y = math.random(win_h)
-	--- roof
+		--- roof
 	else 
 		args.x = math.random(win_w)
 		args.y = random_of_two(0, win_h)
@@ -133,7 +133,7 @@ function spawn_enemy()
 	else
 		args.y_dir = -1
 	end
-	
+
 	return spawn("enemy", args)
 end
 

@@ -109,9 +109,9 @@ function love.update(dt)
 		game_time = game_time + dt
 		if game_time > 6 and not music.main_music_started then
 			music.main_music_started = true
- 			music.penta:play()
- 			music.penta:setLooping(true)
- 		end
+			music.penta:play()
+			music.penta:setLooping(true)
+		end
 
 		modes[mode].func_update(dt)
 
@@ -229,20 +229,20 @@ function show_infoscreen()
 	write_centered("Shift between modes:", medium_font, 0.3*win_h / 4, win_w)
 	write_centered("Press", small_font, y - 2.1*w, win_w)
 
-	write("1", small_font, x - 1.1*w, 	y - 1.4*w)
-	write_centered("2", small_font,		y - 1.4*w, win_w)
-	write("3", small_font, x + 1.8*w, 	y - 1.4*w)
+	write("1", small_font, x - 1.1*w, y - 1.4*w)
+	write_centered("2", small_font,	y - 1.4*w, win_w)
+	write("3", small_font, x + 1.8*w,	y - 1.4*w)
 
 	write_centered("to", small_font, y - dist + 0.7*w, win_w)
 
-	write("see", small_font, x - 1.3*w, 	y + 0.9*w)
-	write_centered("move", small_font,	 	y + 0.9*w, win_w)
-	write("shoot", small_font, x + 1.5*w, 	y + 0.9*w)
+	write("see", small_font, x - 1.3*w,	y + 0.9*w)
+	write_centered("move", small_font, y + 0.9*w, win_w)
+	write("shoot", small_font, x + 1.5*w, y + 0.9*w)
 
 	--write_centered("with", small_font, y + 1.6*w, win_w)
 
-	write_centered("< >  to rotate in see and shoot mode", small_font, 	y + 2.2*w, win_w)
-	write_centered("< ^ ˇ >   to move in move mode", small_font, 	y + 2.8*w, win_w) 
+	write_centered("< >  to rotate in see and shoot mode", small_font, y + 2.2*w, win_w)
+	write_centered("< ^ ˇ >   to move in move mode", small_font, y + 2.8*w, win_w) 
 
 	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
 	love.graphics.rectangle("line", x, y, w, h, 0) 
