@@ -1,11 +1,12 @@
-require("slam")
+require("lib/slam")
 
 -- KEYMAP
 alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 
-big_font = love.graphics.newFont("yf16font.ttf", 55)
-medium_font = love.graphics.newFont("yf16font.ttf", 35)
-small_font = love.graphics.newFont("yf16font.ttf", 15)
+yf_font = "res/yf16font.ttf"
+big_font = love.graphics.newFont(yf_font, 55)
+medium_font = love.graphics.newFont(yf_font, 35)
+small_font = love.graphics.newFont(yf_font, 15)
 small_font:setFilter( "nearest", "nearest" )
 medium_font:setFilter( "nearest", "nearest" )
 big_font:setFilter( "nearest", "nearest" )
@@ -45,19 +46,20 @@ function reset_all_values()
 end
 
 -- SOUND EFFECTS
-sound_enemy_hit	  = love.audio.newSource("sound/enemy_hit.wav", "static")
+sound_path = "res/sound/"
+sound_enemy_hit	  = love.audio.newSource(sound_path.."enemy_hit.wav", "static")
 sound_enemy_spawn = love.audio.newSource({
-		"sound/enemy_spawn_long.wav", 
-		"sound/enemy_spawn_short.wav"
+		sound_path.."enemy_spawn_long.wav", 
+		sound_path.."enemy_spawn_short.wav"
 }, "static")
 sound_player_hit  = love.audio.newSource({
-		"sound/hit_short.wav", 
-		"sound/hit_long.wav"
+		sound_path.."hit_short.wav", 
+		sound_path.."hit_long.wav"
 }, "static")
-sound_shoot				= love.audio.newSource("sound/shot.wav", "static")
+sound_shoot				= love.audio.newSource(sound_path.."shot.wav", "static")
 
 -- MUSIC
 main_music_started = false
-music_western      = love.audio.newSource("sound/western.wav", "stream")
-music_bergakung    = love.audio.newSource("sound/bergakung.wav", "stream")
-music_penta        = love.audio.newSource("sound/penta.wav", "stream")
+music_western      = love.audio.newSource(sound_path.."western.wav", "stream")
+music_bergakung    = love.audio.newSource(sound_path.."bergakung.wav", "stream")
+music_penta        = love.audio.newSource(sound_path.."penta.wav", "stream")

@@ -1,4 +1,4 @@
-c = require("collision")
+c = require("lib/collision")
 require("values")
 
 function get_value(table, arg, default)

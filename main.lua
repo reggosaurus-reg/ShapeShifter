@@ -1,4 +1,4 @@
-collision = require("collision")
+collision = require("lib/collision")
 require("modes")
 require("objects")
 require("functions")
