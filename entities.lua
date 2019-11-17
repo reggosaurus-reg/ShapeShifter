@@ -1,9 +1,8 @@
 c = require("lib/collision")
+require("lib/helpers")
 require("values")
-
-function get_value(table, arg, default)
-	if table[arg] ~= nil then return table[arg] else return default end
-end
+require("movement")
+require("lib/graphics")
 
 -- Spawn object
 function spawn(object_type, args)
@@ -139,124 +138,41 @@ function spawn_invinc_enemy()
 	return enemy
 end
 
--- Draw functions
-function draw_rectangle(object)
-	love.graphics.push()
-		love.graphics.translate(object.x, object.y)
-		love.graphics.rotate(object.rotation)
-		function sub_rectangle(x, y, w, h)
-			love.graphics.rectangle(object.filling, x, y, w, h)
+function update(entity) 
+
+end
+
+function update_other_objects(dt)
+	to_remove = {}
+	for i, shot in pairs(shots) do
+		if shot:move(dt) == false then
+			to_remove[#to_remove + 1] = i
 		end
-		draw_subs(object, sub_rectangle)
-	love.graphics.pop()
-end
-
-function draw_single_rectangle(object)
-	love.graphics.push()
-		love.graphics.translate(object.x, object.y)
-		love.graphics.rotate(object.rotation)
-		love.graphics.rectangle(object.filling, - (object.width / 2), - (object.height / 2), object.width, object.height)
-	love.graphics.pop()
-end
-
-function draw_ellipse(object)
-	love.graphics.push()
-		love.graphics.translate(object.x, object.y)
-		love.graphics.rotate(object.rotation)
-		function sub_ellipse(x, y, w, h)
-			love.graphics.rectangle(object.filling, x, y, w, h, 
-									object.width / 2, object.height / 2)
+		shot:update()
+	end
+	for i, num in pairs(to_remove) do
+		table.remove(shots, i)
+	end
+	if enemies_spawned < math.floor(game_time / enemy_spawn_interval) then
+		-- e.g. game_time = 6.01 => game_time / enemy_interval = 3.005
+		-- so if enemies_spawned == 2 then spawn 
+		sound_enemy_spawn:play()
+		enemies_spawned = enemies_spawned + 1
+		if game_time > 60 then
+			enemies[#enemies + 1] = random_of_two(spawn_enemy(), spawn_invinc_enemy())
+		else
+			enemies[#enemies + 1] = spawn_enemy()
 		end
-		draw_subs(object, sub_ellipse)
-	love.graphics.pop()
-end
-
-function draw_triangle(object)
-	love.graphics.push()
-		love.graphics.translate(object.x, object.y)
-		love.graphics.rotate(object.rotation)
-		local w0 = object.width / 2
-		local h0 = object.height / 2
-		for hurt = curr_damage, max_damage do
-			local s = 1 - hurt / max_damage
-			local diff = 1.1
-			vertices = {0, - h0 + diff*s*h0,
-						w0 - diff*s*w0, h0 - s*h0,
-						- w0 + diff*s*w0, h0 - s*h0}
-			love.graphics.polygon(object.filling, vertices)
+	end
+	to_remove = {}
+	for i, enemy in pairs(enemies) do
+		if enemy:move(dt) == false then
+			to_remove[#to_remove + 1] = i
 		end
-	love.graphics.pop()
-end
-
-function draw_subs(object, func)
-	local x0 = - (object.width / 2)
-	local y0 = - (object.height / 2)
-	local w0 = object.width
-	local h0 = object.height
-	for hurt = curr_damage, max_damage do
-		local p = hurt / max_damage
-		func(x0 + w0/2 * (1-p), y0 + h0/2 * (1-p), w0 * p, h0 * p)
+		enemy:update()
+	end
+	for i, num in pairs(to_remove) do
+		table.remove(enemies, i)
 	end
 end
 
--- Update functions
-
-function rotate(object, dt)
-	object.rotation = object.rotation + object.rotation_dir * rotation_speed * dt
-end
-
-function move_player(player, dt)
-	if (player.x + player.x_dir * player.x_speed * dt) + player.width / 2 > win_w then
-		player.x = win_w - player.width / 2
-		return false
-	elseif player.x + player.x_dir * player.x_speed * dt < player.width / 2 then
-		player.x = player.width / 2
-		return false
-	end
-
-	if (player.y + player.y_dir * player.y_speed * dt) + player.height / 2 > win_h then
-		-- TODO player gets "stuck" here
-		return false
-	elseif player.y + player.y_dir * player.y_speed * dt < player.height / 2 then
-		player.y = player.height / 2
-		return false
-	end
-	move(player, dt)
-	return true
-end
-
-function move_shot(shot, dt)
-	if shot.x - shot.radius > win_w or shot.x + shot.radius < 0 or 
-			shot.y - shot.radius > win_h or shot.y + shot.radius < 0 then return false end
-	move(shot, dt)
-	return true
-end
-
-function move_enemy(enemy, dt)
-	if enemy.x - enemy.width * 2 > win_w or
-			enemy.y - enemy.height * 2 > win_h or
-			enemy.x + enemy.width * 2 < 0 or
-			enemy.y + enemy.height * 2 < 0 then return false end
-	move(enemy, dt)
-	return true
-end
-
-function move(object, dt)
-	-- if object.canMove()
-	object.x = object.x + object.x_dir * object.x_speed * dt
-	object.y = object.y + object.y_dir * object.y_speed * dt
-
-	c.moveTo(object.shape, object.x, object.y)
-end
-
-function update(object)
-
-end
-
-function random_of_two(a, b)
-	if math.random(0, 1) == 0 then
-		return a
-	else 
-		return b
-	end
-end

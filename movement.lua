@@ -1,36 +1,46 @@
-require("values")
-
-function write_centered(text, font, y, win)
-	local w = font:getWidth(text)
-	love.graphics.setFont(font)
-	love.graphics.print(text, (win - w) / 2, y)
-end
-
-function write_right(text, font, win_w, margin)
-	local w = font:getWidth(text)
-	love.graphics.setFont(font)
-	love.graphics.print(text, win_w - w - 2*margin, margin)
-end
-
-function write(text, font, x, y)
-	local w = font:getWidth(text)
-	love.graphics.setFont(font)
-	love.graphics.print(text, x, y)
-end
-
-function time_to_string(time)
-	time = math.ceil((time * 100)) / 100
-	local time = ""..time
-	if #time == 1 then
-		return time..".00"
-	elseif #time== 3 then
-		return time.."0"
-	else 
-		return time
+function move_player(player, dt)
+	if (player.x + player.x_dir * player.x_speed * dt) + player.width / 2 > win_w then
+		player.x = win_w - player.width / 2
+		return false
+	elseif player.x + player.x_dir * player.x_speed * dt < player.width / 2 then
+		player.x = player.width / 2
+		return false
 	end
+
+	if (player.y + player.y_dir * player.y_speed * dt) + player.height / 2 > win_h then
+		-- TODO player gets "stuck" here
+		return false
+	elseif player.y + player.y_dir * player.y_speed * dt < player.height / 2 then
+		player.y = player.height / 2
+		return false
+	end
+	move(player, dt)
+	return true
 end
- 
--- Used by modes to move player
+
+function move_shot(shot, dt)
+	if shot.x - shot.radius > win_w or shot.x + shot.radius < 0 or 
+			shot.y - shot.radius > win_h or shot.y + shot.radius < 0 then return false end
+	move(shot, dt)
+	return true
+end
+
+function move_enemy(enemy, dt)
+	if enemy.x - enemy.width * 2 > win_w or
+			enemy.y - enemy.height * 2 > win_h or
+			enemy.x + enemy.width * 2 < 0 or
+			enemy.y + enemy.height * 2 < 0 then return false end
+	move(enemy, dt)
+	return true
+end
+
+function move(object, dt)
+	-- if object.canMove()
+	object.x = object.x + object.x_dir * object.x_speed * dt
+	object.y = object.y + object.y_dir * object.y_speed * dt
+
+	c.moveTo(object.shape, object.x, object.y)
+end
 
 function reset_rotations()
 	player.rotation_dir = 0

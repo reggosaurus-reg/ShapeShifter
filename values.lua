@@ -34,6 +34,7 @@ enemy_spawn_interval = 2
 enemies_spawned = 0
 
 shot_interval = 1
+last_shot = 0
 
 function reset_state_values()
 	-- reset all state-values (that change every game)

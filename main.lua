@@ -1,7 +1,8 @@
 collision = require("lib/collision")
+require("lib/text")
 require("modes")
-require("objects")
-require("functions")
+require("entities")
+require("movement")
 require("values")
 
 function love.load()
