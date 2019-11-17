@@ -1,72 +1,87 @@
 c = require("lib/collision")
-require("lib/helpers")
-require("values")
-require("movement")
 require("lib/graphics")
+require("lib/helpers")
+require("movement")
+
+enemy_spawn_interval = 2
+enemies_spawned = 0
+
+shot_interval = 1
+last_shot = 0
 
 -- Spawn object
 function spawn(object_type, args)
 	if object_type == "player" then
 		local player = {}
-		player.object_type = object_type
-		player.x = get_value(args, "x", win_w / 2)
-		player.y = get_value(args, "y", win_h / 2)
-		player.x_speed = get_value(args, "x_speed", 300)
-		player.y_speed = get_value(args, "y_speed", 300)
-		player.x_dir = 0
-		player.y_dir = 0
+		player.curr_damage = 1
+		player.draw = get_value(args, "draw", draw_rectangle)
+		player.filling = "line"
 		player.height = get_value(args, "height", 60)
 		player.width = get_value(args, "width", 60)
+		player.max_damage = 4
+		player.move = get_value(args, "move", move_player)
+		player.object_type = object_type
+		player.rotate = get_value(args, "rotate", rotate)
 		player.rotation = 0
 		player.rotation_dir = 0
+		player.rotation_speed = math.pi * 2
 		player.round = 0
-		player.filling = "line"
-		player.shape = c.makeRect(player.x, player.y, player.width, player.height)
-		player.move = get_value(args, "move", move_player)
-		player.rotate = get_value(args, "rotate", rotate)
 		player.update = get_value(args, "update", update)
-		player.draw = get_value(args, "draw", draw_rectangle)
+		player.x = get_value(args, "x", win_w / 2)
+		player.x_dir = 0
+		player.x_speed = get_value(args, "x_speed", 300)
+		player.y = get_value(args, "y", win_h / 2)
+		player.y_dir = 0
+		player.y_speed = get_value(args, "y_speed", 300)
+
+		player.shape = c.makeRect(player.x, player.y, player.width, player.height)
 		return player
 	elseif object_type == "enemy" then
 		local enemy = {}
-		enemy.object_type = object_type
-		enemy.x = get_value(args, "x", 0) 
-		enemy.y = get_value(args, "y", 0)
-		enemy.x_speed = get_value(args, "x_speed", 100)
-		enemy.y_speed = get_value(args, "y_speed", 100)
-		enemy.x_dir = get_value(args, "x_dir", 1)
-		enemy.y_dir = get_value(args, "y_dir", 1)
+		enemy.draw = get_value(args, "draw", draw_single_rectangle)
+		enemy.filling = "fill"
 		enemy.height = get_value(args, "height", 80) 
 		enemy.width = get_value(args, "width", 80)
+		enemy.min_speed = 100
+		enemy.max_speed = 200
+		enemy.move = get_value(args, "move", move_enemy)
+		enemy.object_type = object_type
 		enemy.rotation = get_value(args, "rotation", 0)
 		enemy.rotation_dir = 0
 		enemy.round = 0 
-		enemy.filling = "fill"
-		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
-		enemy.draw = get_value(args, "draw", draw_single_rectangle)
-		enemy.move = get_value(args, "move", move_enemy)
 		enemy.update = get_value(args, "update", update)
+		enemy.x = get_value(args, "x", 0) 
+		enemy.x_dir = get_value(args, "x_dir", 1)
+		enemy.y = get_value(args, "y", 0)
+		enemy.y_dir = get_value(args, "y_dir", 1)
+		
+		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
+		enemy.x_speed = get_value(args, "x_speed",
+				math.random(enemy.min_speed, enemy.max_speed))
+		enemy.y_speed = get_value(args, "y_speed",
+				math.random(enemy.min_speed, enemy.max_speed))
 		return enemy
 	elseif object_type == "shot" then
 		local shot = {}
+		shot.draw = get_value(args, "draw", draw_ellipse)
+		shot.filling = "fill"
+		shot.move = get_value(args, "move", move_shot)
 		shot.object_type = object_type
-		shot.x = get_value(args, "x", 200)
-		shot.y = get_value(args, "y", 200)
-		shot.x_dir = 1
-		shot.y_dir = 1
+		shot.radius = get_value(args, "radius", 8)
 		shot.rotation = get_value(args, "rotation", 0)
+		shot.round = 1
 		shot.speed = get_value(args, "speed", 400)
+		shot.update = get_value(args, "update", update)
+		shot.x = get_value(args, "x", 200)
+		shot.x_dir = 1
+		shot.y = get_value(args, "y", 200)
+		shot.y_dir = 1
+
+		shot.height = shot.radius * 2
+		shot.width = shot.radius * 2
+		shot.shape = c.makeCircle(shot.x, shot.y, shot.radius)
 		shot.x_speed = shot.speed * math.cos(shot.rotation)
 		shot.y_speed = shot.speed * math.sin(shot.rotation)
-		shot.radius = get_value(args, "radius", 8)
-		shot.width = shot.radius * 2
-		shot.height = shot.radius * 2
-		shot.round = 1
-		shot.filling = "fill"
-		shot.shape = c.makeCircle(shot.x, shot.y, shot.radius)
-		shot.move = get_value(args, "move", move_shot)
-		shot.update = get_value(args, "update", update)
-		shot.draw = get_value(args, "draw", draw_ellipse)
 		return shot
 	end
 end
@@ -75,14 +90,10 @@ end
 
 function init_objects()
 	player = spawn("player", {height = 70})
-	curr_damage = 1
-
 	enemies = {}
-	start_time = love.timer.getTime()
-	min_speed = 100
-	max_speed = 200
-
 	shots = {}
+
+	start_time = love.timer.getTime()
 end
 
 function spawn_shot()
@@ -123,9 +134,6 @@ function spawn_enemy()
 		args.y_dir = -1
 	end
 	
-	args.x_speed = math.random(min_speed, max_speed) -- TODO: Change max/ min when "levelup"
-	args.y_speed = math.random(min_speed, max_speed)
-
 	return spawn("enemy", args)
 end
 
@@ -138,9 +146,7 @@ function spawn_invinc_enemy()
 	return enemy
 end
 
-function update(entity) 
-
-end
+function update(entity) end
 
 function update_other_objects(dt)
 	to_remove = {}
@@ -156,7 +162,7 @@ function update_other_objects(dt)
 	if enemies_spawned < math.floor(game_time / enemy_spawn_interval) then
 		-- e.g. game_time = 6.01 => game_time / enemy_interval = 3.005
 		-- so if enemies_spawned == 2 then spawn 
-		sound_enemy_spawn:play()
+		sound.enemy_spawn:play()
 		enemies_spawned = enemies_spawned + 1
 		if game_time > 60 then
 			enemies[#enemies + 1] = random_of_two(spawn_enemy(), spawn_invinc_enemy())

@@ -48,8 +48,8 @@ function draw_triangle(object)
 		love.graphics.rotate(object.rotation)
 		local w0 = object.width / 2
 		local h0 = object.height / 2
-		for hurt = curr_damage, max_damage do
-			local s = 1 - hurt / max_damage
+		for hurt = player.curr_damage, player.max_damage do
+			local s = 1 - hurt / player.max_damage
 			local diff = 1.1
 			vertices = {0, - h0 + diff*s*h0,
 						w0 - diff*s*w0, h0 - s*h0,
@@ -64,8 +64,8 @@ function draw_subs(object, func)
 	local y0 = - (object.height / 2)
 	local w0 = object.width
 	local h0 = object.height
-	for hurt = curr_damage, max_damage do
-		local p = hurt / max_damage
+	for hurt = player.curr_damage, player.max_damage do
+		local p = hurt / player.max_damage
 		func(x0 + w0/2 * (1-p), y0 + h0/2 * (1-p), w0 * p, h0 * p)
 	end
 end

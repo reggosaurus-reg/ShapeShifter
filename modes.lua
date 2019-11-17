@@ -53,7 +53,7 @@ mode_attack = {
 		if game_time - last_shot > shot_interval then
 			last_shot = game_time
 			spawn_shot()
-			sound_shoot:play()
+			sound.shoot:play()
 		end
 	end
 }

@@ -1,20 +1,35 @@
 collision = require("lib/collision")
+require("entities")
+require("lib/sound")
 require("lib/text")
 require("modes")
-require("entities")
 require("movement")
-require("values")
 
 function love.load()
+	win_w = 800	
+	win_h = 600
+
 	love.window.setMode(win_w, win_h, {resizable=false, vsync=true, highdpi=true})
+
+	hs_holder = "A. Nonymous"
+	highscore = 0
+
+	key_right = "right"
+	key_left = "left"
+	key_up = "up"
+	key_down = "down"
+	key_see = "1"
+	key_move = "2"
+	key_attack = "3"
+	-- "none", "rot", "move"
+	pressed_keys = {left = "none", right = "none", up = "none", down = "none"}
 
 	modes = {mode1 = mode_see, mode2 = mode_move, mode3 = mode_attack}
 	mode = "mode"..key_see
 
 	state = "start" -- or "game_running" or "take_name" or "dead" or "info"
 
-	music_bergakung:play()
-	music_bergakung:setLooping(true)
+	music.bergakung:play()
 end
 
 function love.keypressed(key)
@@ -22,9 +37,9 @@ function love.keypressed(key)
 		if key == "escape" then
 			state = "start"
 			mode = "mode"..key_see
-			music_penta:stop()
-			music_western:stop()
-			music_bergakung:play()
+			music.bergakung:play()
+			music.penta:stop()
+			music.western:stop()
 		end
 		-- Modes
 		if key == key_see or key == key_move or key == key_attack then
@@ -49,7 +64,7 @@ function love.keypressed(key)
 		if key == "escape" then
 			state = "start"
 		elseif key == "space" or key == "return" then
-			music_bergakung:stop()
+			music.bergakung:stop()
 			start_game()
 		end
 
@@ -61,6 +76,7 @@ function love.keypressed(key)
 
 	elseif state == "take_name" then
 		if key == "return" or key == "escape" then
+			music.bergakung:play()
 			state = "start"
 		end
 		if key == "backspace" and #hs_holder > 0 then
@@ -68,7 +84,7 @@ function love.keypressed(key)
 				hs_holder = hs_holder:sub(1, #hs_holder - 1)
 			end
 		end
-		if string.find(alphabet, key) then
+		if is_character(key) then
 			if #hs_holder < 20 then
 				if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
 					hs_holder = hs_holder..string.upper(key)
@@ -91,10 +107,10 @@ end
 function love.update(dt)
 	if state == "game_running" then
 		game_time = game_time + dt
-		if game_time > 6 and not game_music_started then
-			game_music_started = true
- 			music_penta:play()
- 			music_penta:setLooping(true)
+		if game_time > 6 and not music.main_music_started then
+			music.main_music_started = true
+ 			music.penta:play()
+ 			music.penta:setLooping(true)
  		end
 
 		modes[mode].func_update(dt)
@@ -102,8 +118,8 @@ function love.update(dt)
 		-- check if an enemy has hit the player
 		for i, enemy in pairs(enemies) do
 			if collision.collisionTest(player.shape, enemy.shape) then
-				sound_player_hit:play()
-				curr_damage = curr_damage + 1
+				sound.player_hit:play()
+				player.curr_damage = player.curr_damage + 1
 				table.remove(enemies, i)
 			end
 		end
@@ -113,10 +129,10 @@ function love.update(dt)
 			for j, enemy in pairs(enemies) do
 				if collision.collisionTest(shot.shape, enemy.shape) then
 					if enemy.object_type ~= "invinc" then
-						if curr_damage > 1 then
-							curr_damage = curr_damage - 1
+						if player.curr_damage > 1 then
+							player.curr_damage = player.curr_damage - 1
 						end
-						sound_enemy_hit:play()
+						sound.enemy_hit:play()
 						table.remove(shots, i)
 						table.remove(enemies, j)
 					end
@@ -124,7 +140,7 @@ function love.update(dt)
 			end
 		end
 
-		if curr_damage > max_damage then
+		if player.curr_damage > player.max_damage then
 			lose_game()
 		end
 	end
@@ -149,13 +165,15 @@ function start_game()
 	init_objects()
 	game_time = 0
 
-	reset_state_values()
-	music_western:play()
+	enemies_spawned = 0
+	last_shot = 0
+	music.western:play()
 end
 
 function lose_game()
 	mode = "mode"..key_see
-	music_penta:stop()
+	music.penta:stop()
+	music.main_music_started = false
 	highscore = math.max(highscore, game_time) 
 	if highscore == game_time then
 		state = "take_name"

@@ -3,7 +3,7 @@ function get_value(table, arg, default)
 end
 
 function rotate(object, dt)
-	object.rotation = object.rotation + object.rotation_dir * rotation_speed * dt
+	object.rotation = object.rotation + object.rotation_dir * object.rotation_speed * dt
 end
 
 function random_of_two(a, b)
