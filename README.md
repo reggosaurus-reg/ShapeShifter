@@ -21,8 +21,3 @@ Collision from [Edvard Thörnros](https://github.com/FredTheDino/)
 
 [1.0 - As presented at the Game Jam](https://github.com/reggosaurus-reg/ShapeShifter/releases/tag/v1.0 "GameJam version")
 
-
-
-
-
-
