@@ -57,9 +57,9 @@ function spawn(object_type, args)
 
 		enemy.shape = c.makeRect(enemy.x, enemy.y, enemy.width, enemy.height)
 		enemy.x_speed = get_value(args, "x_speed",
-		math.random(enemy.min_speed, enemy.max_speed))
+				math.random(enemy.min_speed, enemy.max_speed))
 		enemy.y_speed = get_value(args, "y_speed",
-		math.random(enemy.min_speed, enemy.max_speed))
+				math.random(enemy.min_speed, enemy.max_speed))
 		return enemy
 	elseif object_type == "shot" then
 		local shot = {}
@@ -100,7 +100,7 @@ function spawn_shot()
 	local args = {}
 	args.x = player.x
 	args.y = player.y
-	args.rotation = player.rotation - math.pi / 2
+	args.rotation = player.rotation - math.pi/2
 	shots[#shots + 1] = spawn("shot", args)
 end
 
@@ -122,13 +122,13 @@ function spawn_enemy()
 	end
 
 	-- to move towards the other end of the screen
-	if args.x < win_w / 2 then
+	if args.x < win_w/2 then
 		args.x_dir = 1
 	else
 		args.x_dir = -1
 	end
 
-	if args.y < win_h / 2 then
+	if args.y < win_h/2 then
 		args.y_dir = 1
 	else
 		args.y_dir = -1

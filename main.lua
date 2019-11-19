@@ -21,6 +21,7 @@ function love.load()
 	key_see = "1"
 	key_move = "2"
 	key_attack = "3"
+
 	-- "none", "rot", "move"
 	pressed_keys = {left = "none", right = "none", up = "none", down = "none"}
 
@@ -70,7 +71,7 @@ function love.keypressed(key)
 
 
 	elseif state == "death" then
-		if key == "space" or key == "return"or key == "escape" then
+		if key == "space" or key == "return" or key == "escape" then
 			state = "start"
 		end
 
@@ -214,9 +215,10 @@ function show_startscreen()
 	
 	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
 	love.graphics.rectangle("line", x, y, w, h, 0) 
-	love.graphics.polygon("line", {x + dist, y, 
-									x + dist, y + h, 
-									x + w + dist, y + h/2}) 
+	love.graphics.polygon("line", {
+			x + dist, y, 
+			x + dist, y + h, 
+			x + w + dist, y + h/2}) 
 end
 
 function show_infoscreen()
@@ -246,8 +248,9 @@ function show_infoscreen()
 
 	love.graphics.rectangle("line", x - dist, y, w, h, w/2, h/2) 
 	love.graphics.rectangle("line", x, y, w, h, 0) 
-	love.graphics.polygon("line", {x + dist, y, 
-									x + dist, y + h, 
-									x + w + dist, y + h/2}) 
+	love.graphics.polygon("line", {
+			x + dist, y, 
+			x + dist, y + h, 
+			x + w + dist, y + h/2}) 
 	write_centered("Press <space> to start game (and shoot)!", small_font, 3.2*win_h / 4, win_w)
 end

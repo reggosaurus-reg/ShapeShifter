@@ -1,17 +1,17 @@
 function move_player(player, dt)
-	if (player.x + player.x_dir * player.x_speed * dt) + player.width / 2 > win_w then
-		player.x = win_w - player.width / 2
+	if (player.x + player.x_dir * player.x_speed * dt) + player.width/2 > win_w then
+		player.x = win_w - player.width/2
 		return false
-	elseif player.x + player.x_dir * player.x_speed * dt < player.width / 2 then
-		player.x = player.width / 2
+	elseif player.x + player.x_dir * player.x_speed * dt < player.width/2 then
+		player.x = player.width/2
 		return false
 	end
 
-	if (player.y + player.y_dir * player.y_speed * dt) + player.height / 2 > win_h then
+	if (player.y + player.y_dir * player.y_speed * dt) + player.height/2 > win_h then
 		-- TODO player gets "stuck" here
 		return false
-	elseif player.y + player.y_dir * player.y_speed * dt < player.height / 2 then
-		player.y = player.height / 2
+	elseif player.y + player.y_dir * player.y_speed * dt < player.height/2 then
+		player.y = player.height/2
 		return false
 	end
 	move(player, dt)
@@ -26,10 +26,10 @@ function move_shot(shot, dt)
 	end
 
 	function move_enemy(enemy, dt)
-		if enemy.x - enemy.width * 2 > win_w or
-			enemy.y - enemy.height * 2 > win_h or
-			enemy.x + enemy.width * 2 < 0 or
-			enemy.y + enemy.height * 2 < 0 then return false end
+		if enemy.x - enemy.width*2 > win_w or
+			enemy.y - enemy.height*2 > win_h or
+			enemy.x + enemy.width*2 < 0 or
+			enemy.y + enemy.height*2 < 0 then return false end
 			move(enemy, dt)
 			return true
 		end

@@ -5,9 +5,9 @@ local yf_font = "res/yf16font.ttf"
 big_font = love.graphics.newFont(yf_font, 55)
 medium_font = love.graphics.newFont(yf_font, 35)
 small_font = love.graphics.newFont(yf_font, 15)
-small_font:setFilter( "nearest", "nearest" )
-medium_font:setFilter( "nearest", "nearest" )
-big_font:setFilter( "nearest", "nearest" )
+small_font:setFilter("nearest", "nearest")
+medium_font:setFilter("nearest", "nearest")
+big_font:setFilter("nearest", "nearest")
 
 function write_centered(text, font, y, win_w)
 	local w = font:getWidth(text)
@@ -28,7 +28,7 @@ function write(text, font, x, y)
 end
 
 function time_to_string(time)
-	time = math.ceil((time * 100)) / 100
+	time = math.ceil(time * 100) / 100
 	local time = ""..time
 	if #time == 1 then
 		return time..".00"
