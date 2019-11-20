@@ -70,8 +70,4 @@ function collision.collisionTest(a, b)
 	return dSq < rSq
 end
 
-function math.clamp(lo, val, hi)
-	return math.min(math.max(lo, val), hi)
-end
-
 return collision

@@ -13,3 +13,7 @@ function random_of_two(a, b)
 		return b
 	end
 end
+
+math.clamp = function(lo, val, hi)
+	return math.min(math.max(lo, val), hi)
+end
