@@ -26,10 +26,10 @@ function collision.collisionTest(a, b)
 		and b.collision_type == "rectangle" then
 		-- Rectangle VS Rectangle
 		local diffX = math.abs((a.x + a.width / 2) - (b.x + b.width / 2)) 
-				- (a.width + b.width) / 2
+						- (a.width + b.width) / 2
 		if diffX > 0 then return false end
 		local diffY = math.abs((a.y + a.height / 2) - (b.y + b.height / 2)) 
-				- (a.height + b.height) / 2
+						- (a.height + b.height) / 2
 		if diffY > 0 then return false end
 		if diffX < diffY then
 			return true
