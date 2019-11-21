@@ -56,11 +56,11 @@ function collision.collisionTest(a, b)
 		circle = a
 	end
 	local nearestX = math.clamp(circle.x, 
-				rect.x, 
-				rect.x + rect.width)
+	rect.x, 
+	rect.x + rect.width)
 	local nearestY = math.clamp(circle.y, 
-				rect.y, 
-				rect.y + rect.height)
+	rect.y, 
+	rect.y + rect.height)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.circle("fill", nearestX, nearestY, 10)
 	local diffX = circle.x - nearestX
@@ -68,10 +68,6 @@ function collision.collisionTest(a, b)
 	local dSq = diffX * diffX + diffY * diffY
 	local rSq = circle.radius * circle.radius
 	return dSq < rSq
-end
-
-function math.clamp(lo, val, hi)
-	return math.min(math.max(lo, val), hi)
 end
 
 return collision
